@@ -52,10 +52,13 @@ public class Dealer
 	
 	public void reshuffleDiscardPile()
 	{
-		drawDeck = discardPile;
-		discardPile.clear();
+		while(!discardPile.isEmpty())
+		{
+			drawDeck.add(discardPile.remove(0));
+		}
 		shuffleCards();
 	}
+
 	
 	public void shuffleCards()
 	{

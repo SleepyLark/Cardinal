@@ -47,6 +47,28 @@ public class PlayingCard implements Card
 
 		return face;
 	}
+	
+	public boolean isRed()
+	{
+		boolean red = false;
+		if(cardSuit == Suit.DIAMONDS || cardSuit == Suit.HEARTS)
+		{
+			red = true;
+		}
+		
+		return red;
+	}
+	
+	public boolean isBlack()
+	{
+		boolean black = false;
+		if(cardSuit == Suit.CLUBS || cardSuit == Suit.SPADES)
+		{
+			black = true;
+		}
+		
+		return black;
+	}
 
 	public String faceToString()
 	{

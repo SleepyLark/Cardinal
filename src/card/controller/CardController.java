@@ -24,6 +24,9 @@ public class CardController
 		System.out.println(luigi.getDrawDeck());
 		luigi.discardACard(luigi.drawACard());
 		System.out.println(luigi.getDrawDeck());
+		System.out.println(luigi.getDiscardPile());
+		luigi.reshuffleDiscardPile();
+		System.out.println(luigi.getDrawDeck());
 		
 	}
 }
