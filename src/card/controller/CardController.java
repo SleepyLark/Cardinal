@@ -7,16 +7,23 @@ import card.model.PlayingCard.Suit;
 public class CardController
 {
 
-	private PlayingCard test;
+	private Dealer luigi;
 	
 	public CardController()
 	{
-		test = new PlayingCard(Suit.CLUBS, PlayingCard.ACE);
+		luigi = new Dealer(this);
+		
+		luigi.buildStandardDeck(false);
+		
+		luigi.shuffleCards();
 				
 	}
 	
 	public void start()
 	{
-		System.out.println(test);
+		System.out.println(luigi.getDrawDeck());
+		luigi.discardACard(luigi.drawACard());
+		System.out.println(luigi.getDrawDeck());
+		
 	}
 }

@@ -1,6 +1,6 @@
 package card.model;
 
-public class PlayingCard
+public class PlayingCard implements Card
 {
 	public enum Suit
 	{
@@ -12,7 +12,7 @@ public class PlayingCard
 	public static final int QUEEN = 12;
 	public static final int KING = 13;
 	public static final int JOKER = 0;
-
+	
 	private Suit cardSuit;
 	private int number;
 	private int[] faceCards;
