@@ -33,7 +33,7 @@ public class CardController
 		toad.addToGame(playerTwo);
 		
 		out(playerOne.getCurrentHand());
-		playerOne.organizeHand(Type.NUMBER);
+		playerOne.organizeHand(Type.SUIT);
 		out(playerOne.getCurrentHand());
 				
 	}

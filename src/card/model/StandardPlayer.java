@@ -2,6 +2,8 @@ package card.model;
 
 import java.util.ArrayList;
 
+import card.model.PlayingCard.Suit;
+
 public class StandardPlayer implements Player
 {
 	
@@ -109,6 +111,29 @@ public class StandardPlayer implements Player
 						Card firstCard = currentHand.remove(index);
 						currentHand.add(index, cardToSwap);
 						currentHand.add(nextIndex, firstCard);
+					}
+				}
+			}
+		}
+		else if(sortBy == Type.SUIT)
+		{
+			for(int index = 0; index < currentHand.size(); index ++)
+			{
+				Suit currentSuit = ((PlayingCard) currentHand.get(index)).getSuit();
+				int currentNumber = ((PlayingCard) currentHand.get(index)).getNumber();
+				int nextSlot = index +1;
+				for(int nextIndex = index+1; nextIndex < currentHand.size(); nextIndex++)
+				{
+					Suit nextSuit = ((PlayingCard) currentHand.get(nextIndex)).getSuit();
+
+					int nextNumber = ((PlayingCard) currentHand.get(nextIndex)).getNumber();
+					if(nextSuit == currentSuit)
+					{
+						Card cardToInsert = currentHand.remove(nextIndex);
+						if(nextNumber > currentNumber)
+						currentHand.add(nextSlot, cardToInsert);
+						else
+						currentHand.add(index,cardToInsert);
 					}
 				}
 			}
