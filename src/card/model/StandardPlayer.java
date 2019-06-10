@@ -68,6 +68,11 @@ public class StandardPlayer implements Player
 		currentHand.add(cardToAdd);
 	}
 	
+	public void addToHand(ArrayList<PlayingCard> cardsToAdd)
+	{
+		currentHand.addAll(cardsToAdd);
+	}
+	
 	public Card playCard(int index)
 	{
 		return currentHand.remove(index);
@@ -90,6 +95,18 @@ public class StandardPlayer implements Player
 		return cardToDiscard;
 	}
 	
+	public Card pickCard(Card cardToPick)
+	{
+		if(currentHand.indexOf(cardToPick) < 0)
+		cardToPick = null;
+		
+		return cardToPick;
+	}
+	
+	public Card pickCard(int index)
+	{
+		return currentHand.get(index);
+	}
 	public Card getLastDrawnCard()
 	{
 		return currentHand.get(getSizeOfHand()-1);

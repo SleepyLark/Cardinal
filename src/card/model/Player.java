@@ -17,5 +17,7 @@ public interface Player
 	public Card discardCard(Card cardToDiscard);
 	public Card playCard(int index);
 	public Card playCard(Card cardToPlay);
+	public Card pickCard(Card cardToPick);
+	public Card pickCard(int index);
 	
 }

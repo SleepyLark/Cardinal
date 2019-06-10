@@ -38,8 +38,71 @@ public class GoFishMaster extends GameMaster
 	
 	public boolean hasASet(StandardPlayer personToCheck)
 	{
-		int playerPosition = this.getPlayers().indexOf(personToCheck);
-		return false;
+		ArrayList<PlayingCard> set = new ArrayList<PlayingCard>();
+		boolean hasSet = false;
+		
+		for(int index = personToCheck.getSizeOfHand()-1; index >=0; index--)
+		{
+			int currentNumber = ((PlayingCard) personToCheck.pickCard(index)).getNumber();
+			int count = 0;
+			for(int nextIndex = index-1; nextIndex >=0; nextIndex--)
+			{
+				int nextNumber = ((PlayingCard) personToCheck.pickCard(nextIndex)).getNumber();
+				if(nextNumber == currentNumber)
+				{
+					set.add((PlayingCard) personToCheck.pickCard(nextIndex));
+					count++;
+				}
+			}
+			if(count == 3)
+			{
+				set.add((PlayingCard) personToCheck.pickCard(index));
+				index-=4;
+				hasSet = true;
+				this.addPoint(personToCheck);
+				for(Card current :  set)
+				{
+					personToCheck.discardCard(current);
+				}
+			}
+			count = 0;
+		}
+		
+		return hasSet;
+	}
+	
+	private void addPoint(int indexOfPlayer)
+	{
+		scoreSheet[indexOfPlayer]++;
+	}
+	
+	private void addPoint(StandardPlayer personToCheck)
+	{
+		addPoint(this.getPlayers().indexOf(personToCheck));
+	}
+	
+	public int getScore(int indexOfPlayer)
+	{
+		return scoreSheet[indexOfPlayer];
+	}
+	
+	public int getScore(StandardPlayer personToGet)
+	{
+		return getScore(this.getPlayers().indexOf(personToGet));
+	}
+	public StandardPlayer determineWinner()
+	{
+		StandardPlayer winner = null;
+		int highScore = 0;
+		for(int index = 0; index < scoreSheet.length; index++)
+		{
+			if(scoreSheet[index] > highScore)
+			{
+				winner = (StandardPlayer) this.getPlayers().get(index);
+			}
+		}
+		
+		return winner;
 	}
 	
 }
