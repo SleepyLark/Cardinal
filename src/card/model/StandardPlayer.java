@@ -68,6 +68,11 @@ public class StandardPlayer implements Player
 		currentHand.add(cardToAdd);
 	}
 	
+	public void addToHand(int index, Card cardToAdd)
+	{
+		currentHand.add(index, cardToAdd);
+	}
+	
 	public void addToHand(ArrayList<PlayingCard> cardsToAdd)
 	{
 		currentHand.addAll(cardsToAdd);

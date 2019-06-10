@@ -11,6 +11,7 @@ public class CardController
 
 	private Dealer luigi;
 	private GoFishMaster toad;
+	private WarMaster bowser;
 	private StandardPlayer playerOne;
 	private StandardPlayer playerTwo;
 
@@ -18,6 +19,7 @@ public class CardController
 	{
 		luigi = new Dealer(this);
 		toad = new GoFishMaster(this);
+		bowser = new WarMaster(this);
 		playerTwo = new StandardPlayer("Yoshi");
 
 		luigi.buildStandardDeck(false);
@@ -26,11 +28,12 @@ public class CardController
 
 	public void start()
 	{
-		consoleGoFishTest();
+		consoleWar();
+		//consoleGoFishTest();
 		// dummyScenario();
 	}
 
-	public void out(Object message)
+	public void out(Object message) 
 	{
 		System.out.println(message);
 	}
@@ -135,6 +138,8 @@ public class CardController
 			}
 
 		}
+	
+		out("Game over.");
 
 		if (toad.determineWinner() == playerOne)
 		{
@@ -144,8 +149,45 @@ public class CardController
 		{
 			out("You lost");
 		}
+		
+		consoleIn.close();
 	}
 
+	
+	public void consoleWar()
+	{
+		Scanner consoleIn = new Scanner(System.in);
+		int turnCount = 0;
+		out("Enter name:");
+		playerOne = new StandardPlayer(consoleIn.nextLine());
+		luigi.shuffleCards();
+		luigi.shuffleCards();
+		bowser.addToGame(playerOne);
+		bowser.addToGame(playerTwo);
+		for (int times = 0; times < 26; times++)
+		{
+			playerOne.addToHand(luigi.drawACard());
+			playerTwo.addToHand(luigi.drawACard());
+		}
+		
+		while(playerOne.getSizeOfHand() > 0 && playerTwo.getSizeOfHand() > 0)
+		{
+			out(bowser.battle(playerOne,playerTwo) + " wins the battle!");
+			turnCount++;
+		}
+		
+		if(playerOne.getSizeOfHand()>playerTwo.getSizeOfHand())
+		{
+			out(playerOne + " is the victor!");
+			
+		}
+		else
+		{
+			out(playerTwo + " is the victor");
+		}
+		
+		out("Turns taken: " + turnCount);
+	}
 	public void dummyScenario()
 	{
 		out("Current Players:");
