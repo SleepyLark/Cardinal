@@ -70,7 +70,7 @@ public class Dealer
 		}
 	}
 
-	private int getRandomInt(int min, int max)
+	public int getRandomInt(int min, int max)
 	{
 		return (int) (Math.random() * max) + min;
 	}
@@ -90,9 +90,10 @@ public class Dealer
 		return drawDeck.remove(0);
 	}
 	
-	public void discardACard(Card discard)
+	public Card discardACard(Card discard)
 	{
 		discardPile.add(discard);
+		return discard;
 	}
 
 }

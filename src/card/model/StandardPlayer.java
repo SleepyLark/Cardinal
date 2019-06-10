@@ -52,14 +52,40 @@ public class StandardPlayer implements Player
 		return currentHand;
 	}
 	
+	public int getSizeOfHand()
+	{
+		return currentHand.size();
+	}
 	public void addToHand(Card cardToAdd)
 	{
 		currentHand.add(cardToAdd);
 	}
 	
-	public void discardCard(int index)
+	public Card playCard(int index)
 	{
-		currentHand.remove(index);
+		return currentHand.remove(index);
+	}
+	
+	public Card playCard(Card cardToPlay)
+	{
+		currentHand.remove(cardToPlay);
+		return cardToPlay;
+	}
+	
+	public Card discardCard(int index)
+	{
+		return currentHand.remove(index);
+	}
+	
+	public Card discardCard(Card cardToDiscard)
+	{
+		currentHand.remove(cardToDiscard);
+		return cardToDiscard;
+	}
+	
+	public Card getLastDrawnCard()
+	{
+		return currentHand.get(getSizeOfHand()-1);
 	}
 	
 	public String toString()
