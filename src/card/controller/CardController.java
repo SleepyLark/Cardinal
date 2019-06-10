@@ -23,19 +23,20 @@ public class CardController
 		luigi.buildStandardDeck(false);
 		luigi.shuffleCards();
 		
-		for(int times = 0; times < 7; times++)
+		
+		for(int times = 0; times < luigi.getDrawDeck().size(); times++)
 		{
 			playerOne.addToHand(luigi.drawACard());
 			playerTwo.addToHand(luigi.drawACard());
 		}
 		
-		toad.addToGame(playerOne);
-		toad.addToGame(playerTwo);
-		
 		out(playerOne.getCurrentHand());
 		playerOne.organizeHand(Type.SUIT);
 		out(playerOne.getCurrentHand());
-				
+		
+		toad.addToGame(playerOne);
+		toad.addToGame(playerTwo);
+		
 	}
 	
 	public void start()
