@@ -2,20 +2,21 @@ package card.controller;
 
 import card.model.*;
 import card.model.PlayingCard.Suit;
+import card.model.StandardPlayer.Type;
 
 
 public class CardController
 {
 
 	private Dealer luigi;
-	private GameMaster toad;
+	private GoFishMaster toad;
 	private StandardPlayer playerOne;
 	private StandardPlayer playerTwo;
 	
 	public CardController()
 	{
 		luigi = new Dealer(this);
-		toad = new GameMaster(this);
+		toad = new GoFishMaster(this);
 		playerOne = new StandardPlayer("Waluigi");
 		playerTwo = new StandardPlayer("Yoshi");
 		
@@ -30,12 +31,16 @@ public class CardController
 		
 		toad.addToGame(playerOne);
 		toad.addToGame(playerTwo);
+		
+		out(playerOne.getCurrentHand());
+		playerOne.organizeHand(Type.NUMBER);
+		out(playerOne.getCurrentHand());
 				
 	}
 	
 	public void start()
 	{
-		dummyScenerio();
+		//dummyScenario();
 	}
 	
 	public void out(Object message)
@@ -43,7 +48,7 @@ public class CardController
 		System.out.println(message);
 	}
 	
-	public void dummyScenerio()
+	public void dummyScenario()
 	{
 		out("Current Players:");
 		out(toad.getPlayers() + "");

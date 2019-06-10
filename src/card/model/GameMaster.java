@@ -3,16 +3,14 @@ package card.model;
 import card.controller.CardController;
 import java.util.ArrayList;
 
-public class GameMaster
+public abstract class GameMaster
 {
-	private CardController mainApp;
 	private ArrayList<Player> playerOrder;
 	private int currentTurn;
 	private int turnCount;
 	
-	public GameMaster(CardController app)
+	public GameMaster()
 	{
-		mainApp = app;
 		playerOrder = new ArrayList<Player>();
 		currentTurn = 0;
 		turnCount = 0;
@@ -41,6 +39,11 @@ public class GameMaster
 	public ArrayList<Player> getPlayers()
 	{
 		return playerOrder;
+	}
+	
+	public int numberOfPlayers()
+	{
+		return playerOrder.size();
 	}
 	
 	public void next()

@@ -10,6 +10,11 @@ public class StandardPlayer implements Player
 	private int loseCount;
 	private ArrayList<Card> currentHand;
 	
+	public enum Type
+	{
+		SUIT, NUMBER;
+	}
+	
 	public StandardPlayer(String username)
 	{
 		this.username = username;
@@ -86,6 +91,28 @@ public class StandardPlayer implements Player
 	public Card getLastDrawnCard()
 	{
 		return currentHand.get(getSizeOfHand()-1);
+	}
+	
+	public void organizeHand(Type sortBy)
+	{
+		if(sortBy == Type.NUMBER)
+		{
+			for(int index = 0; index < currentHand.size(); index ++)
+			{
+				for(int nextIndex = index+1; nextIndex < currentHand.size(); nextIndex++)
+				{
+					int currentNumber = ((PlayingCard) currentHand.get(index)).getNumber();
+					int nextNumber = ((PlayingCard) currentHand.get(nextIndex)).getNumber();
+					if(nextNumber < currentNumber)
+					{
+						Card cardToSwap = currentHand.remove(nextIndex);
+						Card firstCard = currentHand.remove(index);
+						currentHand.add(index, cardToSwap);
+						currentHand.add(nextIndex, firstCard);
+					}
+				}
+			}
+		}
 	}
 	
 	public String toString()
