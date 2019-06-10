@@ -8,25 +8,44 @@ public class CardController
 {
 
 	private Dealer luigi;
+	private GameMaster toad;
+	private StandardPlayer playerOne;
+	private StandardPlayer playerTwo;
 	
 	public CardController()
 	{
 		luigi = new Dealer(this);
+		toad = new GameMaster(this);
+		playerOne = new StandardPlayer("Waluigi");
+		playerTwo = new StandardPlayer("Yoshi");
 		
 		luigi.buildStandardDeck(false);
-		
 		luigi.shuffleCards();
+		
+		for(int times = 0; times < 7; times++)
+		{
+			playerOne.addToHand(luigi.drawACard());
+			playerTwo.addToHand(luigi.drawACard());
+		}
+		
+		toad.addToGame(playerOne);
+		toad.addToGame(playerTwo);
 				
 	}
 	
 	public void start()
 	{
-		System.out.println(luigi.getDrawDeck());
-		luigi.discardACard(luigi.drawACard());
-		System.out.println(luigi.getDrawDeck());
-		System.out.println(luigi.getDiscardPile());
-		luigi.reshuffleDiscardPile();
-		System.out.println(luigi.getDrawDeck());
+		out("Current Players:");
+		out(toad.getPlayers() + "");
+		out(playerOne.getUsername()+"'s hand:");
+		out(playerOne.getCurrentHand());
+		out(playerTwo.getUsername()+"'s hand:");
+		out(playerTwo.getCurrentHand());
 		
+	}
+	
+	public void out(Object message)
+	{
+		System.out.println(message);
 	}
 }
