@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import card.controller.CardController;
 import card.model.PlayingCard.Suit;
 
+/**
+ * Source of the main deck of cards
+ * @author Skyler
+ *
+ */
 public class Dealer
 {
 	private ArrayList<Card> drawDeck;
@@ -20,6 +25,10 @@ public class Dealer
 
 	}
 
+	/**
+	 * Builds a new deck with all 52 cards found in a standard card deck
+	 * @param includeJokers  Adds two joker cards
+	 */
 	public void buildStandardDeck(Boolean includeJokers)
 	{
 		Suit[] suits = { Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES };
@@ -38,6 +47,9 @@ public class Dealer
 		}
 	}
 
+	/**
+	 * "Shuffles" the deck <br><i>maybe do some more complex shuffling?</i>
+	 */
 	private void shuffle()
 	{
 		ArrayList<Card> temp = new ArrayList<Card>();
@@ -50,6 +62,9 @@ public class Dealer
 		drawDeck = temp;
 	}
 	
+	/**
+	 * puts the Discard pile back into the draw deck and shuffles it
+	 */
 	public void reshuffleDiscardPile()
 	{
 		while(!discardPile.isEmpty())
@@ -59,7 +74,9 @@ public class Dealer
 		shuffleCards();
 	}
 
-	
+	/**
+	 * "shuffles" the cards a random amount of times
+	 */
 	public void shuffleCards()
 	{
 		int shuffleAmount = getRandomInt(1,5);
@@ -70,7 +87,13 @@ public class Dealer
 		}
 	}
 
-	public int getRandomInt(int min, int max)
+	/**
+	 * get a random integer (faster than doing Math.random() and casting it).
+	 * @param min the lowest possible value
+	 * @param max the highest possible value
+	 * @return a random integer
+	 */
+	public static int getRandomInt(int min, int max)
 	{
 		return (int) (Math.random() * max) + min;
 	}
@@ -94,6 +117,16 @@ public class Dealer
 	{
 		discardPile.add(discard);
 		return discard;
+	}
+	
+	public int getDrawDeckSize()
+	{
+		return drawDeck.size();
+	}
+	
+	public int getDiscardPileSize()
+	{
+		return discardPile.size();
 	}
 
 }

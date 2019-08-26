@@ -20,7 +20,7 @@ public class CardController
 		luigi = new Dealer(this);
 		toad = new GoFishMaster(this);
 		bowser = new WarMaster(this);
-		playerTwo = new StandardPlayer("Yoshi");
+		playerTwo = new FishBot("Yoshi");
 
 		luigi.buildStandardDeck(false);
 
@@ -28,12 +28,12 @@ public class CardController
 
 	public void start()
 	{
-		consoleWar();
-		//consoleGoFishTest();
+		// consoleWar();
+		consoleGoFishTest();
 		// dummyScenario();
 	}
 
-	public void out(Object message) 
+	public void out(Object message)
 	{
 		System.out.println(message);
 	}
@@ -63,16 +63,16 @@ public class CardController
 				if (toad.hasASet((StandardPlayer) toad.getCurrentPlayer()))
 					out(toad.getCurrentPlayer() + " got a point!");
 			}
-			
+
 			out(toad.getCurrentPlayer() + "'s score: " + toad.getScore((StandardPlayer) toad.getCurrentPlayer()));
 			if (toad.getCurrentPlayer() == playerOne)
 			{
 
 				out("Your hand:");
-				out("Last card drawn: "+ playerOne.getLastDrawnCard());
+				out("Last card drawn: " + playerOne.getLastDrawnCard());
 				playerOne.organizeHand(Type.NUMBER);
 				out(playerOne.getCurrentHand());
-				out("Size: "+playerOne.getSizeOfHand());
+				out("Size: " + playerOne.getSizeOfHand());
 
 				if (playerOne.getSizeOfHand() > 0)
 				{
@@ -85,9 +85,14 @@ public class CardController
 					if (cards.size() == 0)
 					{
 						out("Go fish");
-						playerOne.addToHand(luigi.drawACard());
-						toad.next();
-						out("It's now " + toad.getCurrentPlayer() + "'s turn");
+						if (luigi.getDrawDeckSize() > 0)
+						{
+							playerOne.addToHand(luigi.drawACard());
+						}
+						else
+						{
+							out("Looks like there's no more cards left to draw!");
+						}
 					}
 					else
 					{
@@ -95,31 +100,36 @@ public class CardController
 						playerOne.addToHand(cards);
 					}
 				}
-				else
+				else if (luigi.getDrawDeckSize() != 0)
 				{
 					out("You're out of card! Draw another one");
 					playerOne.addToHand(luigi.drawACard());
-					toad.next();
-					out("It's now " + toad.getCurrentPlayer() + "'s turn");
 
 				}
-
+				else
+				{
+					out("There's no more cards left.");
+				}
+				
+				toad.next();
+				out("It's now " + toad.getCurrentPlayer() + "'s turn");
+			
 			}
 			else
 			{
 				if (playerTwo.getSizeOfHand() > 0)
 				{
-					int cardIndex = luigi.getRandomInt(0, playerTwo.getSizeOfHand() - 1);
-					out("got any " + ((PlayingCard) playerTwo.pickCard(cardIndex)).getNumber() + "'s?");
+					PlayingCard cardWanted = ((FishBot)playerTwo).takeTurn();
+					out("got any " + cardWanted.getNumber()+ "'s?");
 
-					ArrayList<PlayingCard> cards = toad.askForCard((StandardPlayer) playerOne, (PlayingCard) playerTwo.pickCard(cardIndex));
+					ArrayList<PlayingCard> cards = toad.askForCard((StandardPlayer) playerOne, cardWanted);
 
 					if (cards.size() == 0)
 					{
 						out("Go fish");
-						playerTwo.addToHand(luigi.drawACard());
-						toad.next();
-						out("It's now " + toad.getCurrentPlayer() + "'s turn");
+						if (luigi.getDrawDeckSize() > 0)
+							playerTwo.addToHand(luigi.drawACard());
+
 					}
 					else
 					{
@@ -131,14 +141,14 @@ public class CardController
 				{
 					out(playerTwo + " ran out of cards! They must draw one.");
 					playerTwo.addToHand(luigi.drawACard());
-					toad.next();
-					out("It's now " + toad.getCurrentPlayer() + "'s turn");
 				}
-
+				
+				toad.next();
+				out("It's now " + toad.getCurrentPlayer() + "'s turn");
+			
 			}
-
 		}
-	
+
 		out("Game over.");
 
 		if (toad.determineWinner() == playerOne)
@@ -149,11 +159,13 @@ public class CardController
 		{
 			out("You lost");
 		}
-		
+
 		consoleIn.close();
 	}
 
-	
+	/*
+	 * Lol this thing doesn't work
+	 */
 	public void consoleWar()
 	{
 		Scanner consoleIn = new Scanner(System.in);
@@ -169,25 +181,26 @@ public class CardController
 			playerOne.addToHand(luigi.drawACard());
 			playerTwo.addToHand(luigi.drawACard());
 		}
-		
-		while(playerOne.getSizeOfHand() > 0 && playerTwo.getSizeOfHand() > 0)
+
+		while (playerOne.getSizeOfHand() > 0 && playerTwo.getSizeOfHand() > 0)
 		{
-			out(bowser.battle(playerOne,playerTwo) + " wins the battle!");
+			out(bowser.battle(playerOne, playerTwo) + " wins the battle!");
 			turnCount++;
 		}
-		
-		if(playerOne.getSizeOfHand()>playerTwo.getSizeOfHand())
+
+		if (playerOne.getSizeOfHand() > playerTwo.getSizeOfHand())
 		{
 			out(playerOne + " is the victor!");
-			
+
 		}
 		else
 		{
 			out(playerTwo + " is the victor");
 		}
-		
+
 		out("Turns taken: " + turnCount);
 	}
+
 	public void dummyScenario()
 	{
 		out("Current Players:");

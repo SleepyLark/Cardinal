@@ -2,6 +2,11 @@ package card.model;
 
 import java.util.ArrayList;
 
+/**
+ * Skills need for any card game
+ * @author Skyler
+ *
+ */
 public interface Player
 {
 	public String getUsername();

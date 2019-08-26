@@ -3,7 +3,11 @@ package card.model;
 import java.util.ArrayList;
 
 import card.model.PlayingCard.Suit;
-
+/**
+ * Attributes needed to play standard card games
+ * @author Skyler
+ *
+ */
 public class StandardPlayer implements Player
 {
 	
@@ -68,16 +72,30 @@ public class StandardPlayer implements Player
 		currentHand.add(cardToAdd);
 	}
 	
+	/**
+	 * Adds a card to a specific index
+	 * @param index where the card should be added
+	 * @param cardToAdd the card to add
+	 */
 	public void addToHand(int index, Card cardToAdd)
 	{
 		currentHand.add(index, cardToAdd);
 	}
 	
+	/**
+	 * Adds a list of cards to the players hand (uses the ArrayList<>.addAll() method)
+	 * @param cardsToAdd list of cards to add
+	 */
 	public void addToHand(ArrayList<PlayingCard> cardsToAdd)
 	{
 		currentHand.addAll(cardsToAdd);
 	}
 	
+	/**
+	 * removes a card from the players hand and puts it into "play" 
+	 * @param index the index of the card you want to play
+	 * @return a reference of the card that was removed
+	 */
 	public Card playCard(int index)
 	{
 		return currentHand.remove(index);
@@ -108,15 +126,26 @@ public class StandardPlayer implements Player
 		return cardToPick;
 	}
 	
+	/**
+	 * 
+	 */
 	public Card pickCard(int index)
 	{
 		return currentHand.get(index);
 	}
+	
+	/**
+	 * gets the last card added to the hand *NOTE: needs to be modified better*
+	 */
 	public Card getLastDrawnCard()
 	{
 		return currentHand.get(getSizeOfHand()-1);
 	}
 	
+	/**
+	 * Sorts the "cards" by a selected type
+	 * @param sortBy Type.NUMBER = least to greatest <br> Type.SUIT = card suit
+	 */
 	public void organizeHand(Type sortBy)
 	{
 		if(sortBy == Type.NUMBER)
