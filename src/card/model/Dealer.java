@@ -70,9 +70,21 @@ public abstract class Dealer
 		}
 	}
 	
-	public void dealCardsToPlayers(ArrayList<Player> players, int numberOfCardsToDeal)
+	/**
+	 * Gives each player a certain amount of cards, or until the draw deck is gone
+	 * @param players list of players in the game
+	 * @param handSize how many cards each player should have
+	 */
+	public void dealCards(ArrayList<Player> players, int handSize)
 	{
-		
+		for(int times = 0; times < handSize && !(drawDeck.isEmpty()); times++)
+		{
+			for(Player currentPlayer : players)
+			{
+				if(!drawDeck.isEmpty())
+				currentPlayer.addToHand(this.drawACard());
+			}
+		}
 	}
 
 	/**
@@ -96,11 +108,20 @@ public abstract class Dealer
 		return discardPile;
 	}
 	
+	/**
+	 * Removes a card from the draw deck
+	 * @return the first card from the draw deck
+	 */
 	public Card drawACard()
 	{
 		return drawDeck.remove(0);
 	}
 	
+	/**
+	 *  adds a card to the discard pile
+	 * @param discard the card that goes in the discard pile
+	 * @return the card that got discarded
+	 */
 	public Card discardACard(Card discard)
 	{
 		discardPile.add(discard);
