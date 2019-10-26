@@ -1,7 +1,8 @@
-package card.model;
+package card.model.dealers;
 
 import card.controller.CardController;
-import card.model.PlayingCard.Suit;
+import card.model.cards.PlayingCard;
+import card.model.cards.PlayingCard.Suit;
 
 public class StandardDealer extends Dealer
 {

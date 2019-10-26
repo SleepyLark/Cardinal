@@ -1,6 +1,8 @@
-package card.model;
+package card.model.players;
 
 import java.util.ArrayList;
+
+import card.model.cards.Card;
 
 /**
  * Skills need for any card game
@@ -9,6 +11,7 @@ import java.util.ArrayList;
  */
 public interface Player
 {
+	public void setUsername(String username);
 	public String getUsername();
 	public int getWinCount();
 	public void winner();

@@ -1,4 +1,4 @@
-package card.model;
+package card.model.cards;
 
 public class PlayingCard implements Card
 {

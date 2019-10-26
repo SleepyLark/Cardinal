@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import card.model.*;
-import card.model.StandardPlayer.Type;
+import card.model.bots.FishBot;
+import card.model.cards.PlayingCard;
+import card.model.dealers.StandardDealer;
+import card.model.games.GoFishMaster;
+import card.model.games.WarMaster;
+import card.model.players.StandardPlayer;
+import card.model.players.StandardPlayer.Type;
 
 public class CardController
 {
@@ -28,8 +34,6 @@ public class CardController
 
 	public void start()
 	{
-		luigi.buildDeck();
-		out(luigi.getDrawDeckSize());
 		// consoleWar();
 		//consoleGoFishTest();
 		// dummyScenario();

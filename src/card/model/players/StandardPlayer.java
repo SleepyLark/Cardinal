@@ -1,8 +1,10 @@
-package card.model;
+package card.model.players;
 
 import java.util.ArrayList;
 
-import card.model.PlayingCard.Suit;
+import card.model.cards.Card;
+import card.model.cards.PlayingCard;
+import card.model.cards.PlayingCard.Suit;
 /**
  * Attributes needed to play standard card games
  * @author Skyler
@@ -29,6 +31,11 @@ public class StandardPlayer implements Player
 		loseCount = 0;
 	}
 
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+	
 	public String getUsername()
 	{
 	

@@ -1,7 +1,10 @@
-package card.model;
+package card.model.games;
 
 import java.util.ArrayList;
 import card.controller.CardController;
+import card.model.cards.Card;
+import card.model.cards.PlayingCard;
+import card.model.players.StandardPlayer;
 
 public class GoFishMaster extends GameMaster
 {

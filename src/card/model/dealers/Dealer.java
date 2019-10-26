@@ -1,9 +1,11 @@
-package card.model;
+package card.model.dealers;
 
 import java.util.ArrayList;
 
 import card.controller.CardController;
-import card.model.PlayingCard.Suit;
+import card.model.cards.Card;
+import card.model.cards.PlayingCard.Suit;
+import card.model.players.Player;
 
 /**
  * Source of the main deck of cards
@@ -71,7 +73,8 @@ public abstract class Dealer
 	}
 	
 	/**
-	 * Gives each player a certain amount of cards, or until the draw deck is gone
+	 * Gives each player a certain amount of cards, or until the draw deck is gone. 
+	 * Useful for the beginning of a game
 	 * @param players list of players in the game
 	 * @param handSize how many cards each player should have
 	 */
@@ -124,7 +127,7 @@ public abstract class Dealer
 	 */
 	public Card discardACard(Card discard)
 	{
-		discardPile.add(discard);
+		discardPile.add(0,discard);
 		return discard;
 	}
 	

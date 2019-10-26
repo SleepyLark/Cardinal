@@ -1,6 +1,8 @@
-package card.model;
+package card.model.games;
 
 import card.controller.CardController;
+import card.model.players.Player;
+
 import java.util.ArrayList;
 
 /**

@@ -1,4 +1,8 @@
-package card.model;
+package card.model.bots;
+
+import card.model.cards.PlayingCard;
+import card.model.dealers.Dealer;
+import card.model.players.StandardPlayer;
 
 public class FishBot extends StandardPlayer
 {

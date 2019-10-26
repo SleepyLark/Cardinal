@@ -1,8 +1,10 @@
-package card.model;
+package card.model.games;
 
 import java.util.ArrayList;
 
 import card.controller.CardController;
+import card.model.cards.PlayingCard;
+import card.model.players.StandardPlayer;
 
 public class WarMaster extends GameMaster
 {
