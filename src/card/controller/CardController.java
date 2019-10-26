@@ -76,8 +76,23 @@ public class CardController
 
 				if (playerOne.getSizeOfHand() > 0)
 				{
-					out("Ask for card:");
-					int cardIndex = consoleIn.nextInt();
+					
+					boolean valid = false;
+					int cardIndex = 0;
+					while (!valid)
+					{
+						out("Ask for card:");
+						cardIndex = consoleIn.nextInt();
+						if(cardIndex > playerOne.getSizeOfHand() || cardIndex < 0)
+						{
+							out("Card doesn't exist! Try again.");
+						}
+						else
+						{
+							valid = true;
+						}
+					}
+					
 					out("got any " + ((PlayingCard) playerOne.pickCard(cardIndex)).getNumber() + "'s?");
 
 					ArrayList<PlayingCard> cards = toad.askForCard((StandardPlayer) playerTwo, (PlayingCard) playerOne.pickCard(cardIndex));
@@ -110,17 +125,14 @@ public class CardController
 				{
 					out("There's no more cards left.");
 				}
-				
-				toad.next();
-				out("It's now " + toad.getCurrentPlayer() + "'s turn");
-			
+
 			}
 			else
 			{
 				if (playerTwo.getSizeOfHand() > 0)
 				{
-					PlayingCard cardWanted = ((FishBot)playerTwo).takeTurn();
-					out("got any " + cardWanted.getNumber()+ "'s?");
+					PlayingCard cardWanted = ((FishBot) playerTwo).takeTurn();
+					out("got any " + cardWanted.getNumber() + "'s?");
 
 					ArrayList<PlayingCard> cards = toad.askForCard((StandardPlayer) playerOne, cardWanted);
 
@@ -142,11 +154,11 @@ public class CardController
 					out(playerTwo + " ran out of cards! They must draw one.");
 					playerTwo.addToHand(luigi.drawACard());
 				}
-				
-				toad.next();
-				out("It's now " + toad.getCurrentPlayer() + "'s turn");
-			
+
 			}
+
+			toad.next();
+			out("It's now " + toad.getCurrentPlayer() + "'s turn");
 		}
 
 		out("Game over.");
