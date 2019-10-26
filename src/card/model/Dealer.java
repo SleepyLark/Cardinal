@@ -10,10 +10,10 @@ import card.model.PlayingCard.Suit;
  * @author Skyler
  *
  */
-public class Dealer
+public abstract class Dealer
 {
-	private ArrayList<Card> drawDeck;
-	private ArrayList<Card> discardPile;
+	protected ArrayList<Card> drawDeck;
+	protected ArrayList<Card> discardPile;
 	private CardController app;
 
 	public Dealer(CardController app)
@@ -24,28 +24,11 @@ public class Dealer
 		discardPile = new ArrayList<Card>();
 
 	}
-
+	
 	/**
-	 * Builds a new deck with all 52 cards found in a standard card deck
-	 * @param includeJokers  Adds two joker cards
+	 * builds the deck of cards needed for the game;
 	 */
-	public void buildStandardDeck(Boolean includeJokers)
-	{
-		Suit[] suits = { Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES };
-
-		if (includeJokers)
-		{
-			drawDeck.add(new PlayingCard(Suit.JOKER, PlayingCard.JOKER));
-			drawDeck.add(new PlayingCard(Suit.JOKER, PlayingCard.JOKER));
-		}
-		for (Suit currentSuit : suits)
-		{
-			for (int number = 1; number <= PlayingCard.KING; number++)
-			{
-				drawDeck.add(new PlayingCard(currentSuit, number));
-			}
-		}
-	}
+	public abstract void buildDeck();
 
 	/**
 	 * "Shuffles" the deck <br><i>maybe do some more complex shuffling?</i>
@@ -85,6 +68,11 @@ public class Dealer
 		{
 			shuffle();
 		}
+	}
+	
+	public void dealCardsToPlayers(ArrayList<Player> players, int numberOfCardsToDeal)
+	{
+		
 	}
 
 	/**

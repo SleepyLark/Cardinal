@@ -9,7 +9,7 @@ import card.model.StandardPlayer.Type;
 public class CardController
 {
 
-	private Dealer luigi;
+	private StandardDealer luigi;
 	private GoFishMaster toad;
 	private WarMaster bowser;
 	private StandardPlayer playerOne;
@@ -17,19 +17,21 @@ public class CardController
 
 	public CardController()
 	{
-		luigi = new Dealer(this);
+		luigi = new StandardDealer(this);
 		toad = new GoFishMaster(this);
 		bowser = new WarMaster(this);
 		playerTwo = new FishBot("Yoshi");
 
-		luigi.buildStandardDeck(false);
+		luigi.buildDeck(false);
 
 	}
 
 	public void start()
 	{
+		luigi.buildDeck();
+		out(luigi.getDrawDeckSize());
 		// consoleWar();
-		consoleGoFishTest();
+		//consoleGoFishTest();
 		// dummyScenario();
 	}
 

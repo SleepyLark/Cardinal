@@ -72,6 +72,11 @@ public abstract class GameMaster
 		return playerOrder.size();
 	}
 	
+	/**
+	 * Additional items needed to play the game
+	 */
+	public abstract void startGame();
+	
 	
 	/**
 	 * switches to the next player
@@ -85,6 +90,15 @@ public abstract class GameMaster
 			currentTurn = 0;
 		}
 		turnCount++;
+	}
+	
+	/**
+	 * Gets the current turn index
+	 * @return the index that references the current player
+	 */
+	public int getCurrentTurn()
+	{
+		return currentTurn;
 	}
 	
 	/**
