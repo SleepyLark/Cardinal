@@ -130,4 +130,20 @@ public abstract class GameMaster
 		currentTurn = 0;
 		turnCount = 0;
 	}
+	
+	public boolean validInt(String maybeInt)
+	{
+		boolean valid = false;
+		try
+		{
+			Integer.parseInt(maybeInt);
+			valid = true;
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return valid;
+	}
 }

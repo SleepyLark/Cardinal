@@ -130,6 +130,15 @@ public abstract class Dealer
 	}
 	
 	/**
+	 * looks at the first card in the discard pile (NOTE: Does not removes the card)
+	 * @return the last card added to the discard pile
+	 */
+	public Card peekFromDiscard()
+	{
+		return discardPile.get(0);
+	}
+	
+	/**
 	 *  adds a card to the discard pile
 	 * @param discard the card that goes in the discard pile
 	 * @return the card that got discarded
