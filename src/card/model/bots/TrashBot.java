@@ -35,7 +35,7 @@ public class TrashBot extends StandardPlayer
 	
 	public void randomUsername()
 	{
-		super.setUsername(usernames.get((int)Math.random() * usernames.size()));
+		super.setUsername(usernames.get((int)(Math.random() * usernames.size())));
 	}
 	
 	public int turn(Card lastCardDiscarded, boolean[] currentHand)

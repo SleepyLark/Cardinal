@@ -23,6 +23,8 @@ public class GarbageMaster extends GameMaster
 	 * for debugging, subjected to change
 	 */
 	private Scanner consoleIn;
+	
+	private boolean gameOver;
 
 	public GarbageMaster(CardController app)
 	{
@@ -31,29 +33,30 @@ public class GarbageMaster extends GameMaster
 		this.maxHandSize = 10;
 		deck = new StandardDealer(app);
 		consoleIn = new Scanner(System.in);
+		gameOver = false;
 	}
 
 	@Override
 	public void startGame()
 	{
-		boolean error = false;
+		boolean error = true;
 		int cpuPlayers = 0;
 
 		app.out("Enter name:");
 		StandardPlayer playerOne = new StandardPlayer(consoleIn.nextLine());
 		this.addToGame(playerOne);
 
-		while (!error)
+		while (error)
 		{
 			app.out("How many CPU players?");
 			cpuPlayers = consoleIn.nextInt();
 
-			if (this.numberOfPlayers() < 2)
+			if (this.numberOfPlayers() < 1)
 			{
 				app.out("Invalid number of players.  Please add players before starting the game");
 			}
 			else
-				error = true;
+				error = false;
 		}
 
 		for (int times = 0; times < cpuPlayers; times++)
@@ -63,7 +66,7 @@ public class GarbageMaster extends GameMaster
 
 		playerHandSize = new int[this.numberOfPlayers()];
 
-		for (int index : playerHandSize)
+		for (int index = 0; index < playerHandSize.length; index++)
 		{
 			playerHandSize[index] = maxHandSize;
 		}
@@ -79,65 +82,70 @@ public class GarbageMaster extends GameMaster
 		}
 
 		deck.buildDeck();
+		deck.shuffleCards();
 		deck.dealCards(this.getPlayers(), maxHandSize);
 		deck.discardACard(deck.drawACard());
 
-		app.out("Discard Pile: " + deck.getDiscardPile().get(0));
-		app.out("It is now " + this.getCurrentPlayer() + "'s turn.");
-		if (this.getCurrentPlayer() == playerOne)
+		while (!gameOver)
 		{
-			app.out("Which deck do you want to draw?");
-			String response = consoleIn.next();
-			if (response.equals("discard"))
+			app.out(debug());
+			app.out("It is now " + this.getCurrentPlayer() + "'s turn.");
+			app.out("Discard Pile: " + deck.peekFromDiscard());
+			if (this.getCurrentPlayer() == playerOne)
 			{
-
-				this.evaluteCard((PlayingCard) deck.drawFromDiscard());
+				app.out("Which deck do you want to draw?");
+				String response = consoleIn.next();
+				if (response.equals("discard"))
+				{
+					
+					this.evaluteCard((PlayingCard) deck.drawFromDiscard());
+				}
+				else
+				{
+					this.evaluteCard((PlayingCard) deck.drawACard());
+				}
 			}
 			else
 			{
-				this.evaluteCard((PlayingCard) deck.drawACard());
+				if (((TrashBot) this.getCurrentPlayer()).turn(deck.peekFromDiscard(), playerHandStatus(this.getCurrentTurn())) == TrashBot.TAKE_FROM_DISCARD)
+				{
+					this.evaluteCard((PlayingCard) deck.drawFromDiscard());
+				}
+				else
+				{
+					this.evaluteCard((PlayingCard) deck.drawACard());
+				}
 			}
-		}
-		else
-		{
-			if(((TrashBot)this.getCurrentPlayer()).turn(deck.peekFromDiscard(),playerHandStatus(this.getCurrentTurn())) == TrashBot.TAKE_FROM_DISCARD)
-					{
-						this.evaluteCard((PlayingCard) deck.drawFromDiscard());
-					}
-			else
-			{
-				this.evaluteCard((PlayingCard) deck.drawACard());
-			}
-		}
 
-		if (wonRound(this.getCurrentTurn()))
-		{
-			app.out(this.getCurrentPlayer() + " has won the round!");
-			this.getCurrentPlayer().winner();
-			int winner = this.getCurrentTurn();
-			this.next();
-			while (this.getCurrentTurn() != winner)
+			if (wonRound(this.getCurrentTurn()))
 			{
-				
-				this.flipAllCardsLeft(this.getCurrentTurn());
-				if(wonRound(this.getCurrentTurn()))
-					app.out(this.getCurrentPlayer() + " also won!");
+				app.out(this.getCurrentPlayer() + " has won the round!");
+				this.getCurrentPlayer().winner();
+				int winner = this.getCurrentTurn();
 				this.next();
+				while (this.getCurrentTurn() != winner)
+				{
+
+					this.flipAllCardsLeft(this.getCurrentTurn());
+					if (wonRound(this.getCurrentTurn()))
+						app.out(this.getCurrentPlayer() + " also won!");
+					this.next();
+				}
+
 			}
 
+			this.next();
 		}
-
-		this.next();
 
 	}
 
-	private boolean evaluteCard(PlayingCard cardToCheck)
+	private void evaluteCard(PlayingCard cardToCheck)
 	{
-		boolean works = false;
+	
+		app.out(printHand());
 
 		if (cardToCheck.getNumber() <= playerHandSize[this.getCurrentTurn()] || cardToCheck.getNumber() == PlayingCard.JACK)
 		{
-
 			int cardSlot = cardToCheck.getNumber() - 1;
 			if (cardToCheck.getNumber() == PlayingCard.JACK)
 			{
@@ -146,6 +154,7 @@ public class GarbageMaster extends GameMaster
 				if (playerHandStatus[this.getCurrentTurn()][cardSlot] == true)
 				{
 					this.getCurrentPlayer().addToHand(cardSlot, cardToCheck);
+					app.out("You put the Jack in the " +cardSlot+"'s place.\nFlipping card...");
 					evaluteCard((PlayingCard) this.getCurrentPlayer().discardCard(cardSlot + 1));
 				}
 			}
@@ -164,8 +173,12 @@ public class GarbageMaster extends GameMaster
 				deck.discardACard(cardToCheck);
 			}
 		}
-
-		return works;
+		else
+		{
+			app.out("Garbage.  Too bad.");
+			deck.discardACard(cardToCheck);
+		}
+		
 	}
 
 	private boolean wonRound(int playerIndex)
@@ -186,7 +199,7 @@ public class GarbageMaster extends GameMaster
 
 		return winner;
 	}
-	
+
 	public boolean[] playerHandStatus(int playerIndex)
 	{
 		return playerHandStatus[playerIndex];
@@ -198,5 +211,39 @@ public class GarbageMaster extends GameMaster
 		{
 			evaluteCard((PlayingCard) this.getPlayer(playerIndex).pickCard(cardSlot));
 		}
+	}
+	
+	private String debug()
+	{
+		String stats = "==[DEBUG]==\n";
+		stats += "Turn Count: " + this.getTurnCount();
+		stats += "\nCurrent Turn position: " + this.getCurrentTurn();
+		stats += "\nPlayer: "+this.getCurrentPlayer();
+		stats += "\nHand:\n";
+		for(int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
+		{
+			stats += "["+index+"]: " + getCurrentPlayer().pickCard(index) + "\tFlipped?: " + playerHandStatus[this.getCurrentTurn()][index] +"\n";
+			
+		}
+		stats += "Size: " + playerHandSize[this.getCurrentTurn()];
+		stats += "\n==========";
+		
+		return stats;
+		
+	}
+	
+	private String printHand()
+	{
+		String stats = "Hand:\n";
+		for(int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
+		{
+			stats += "["+index+"]: ";
+			if(playerHandStatus[this.getCurrentTurn()][index])
+				stats += this.getCurrentPlayer().pickCard(index) + "\n";
+			else
+				stats += "????\n";
+		}
+		
+		return stats;
 	}
 }
