@@ -21,7 +21,7 @@ public class FishBot extends StandardPlayer
 		boolean pass = false;
 		while (pass == false)
 		{
-			int cardIndex = Dealer.getRandomInt(0, this.getSizeOfHand() - 1);
+			int cardIndex = Dealer.getRandomInt(0, this.getHandSize() - 1);
 			if (((PlayingCard) this.pickCard(cardIndex)).getNumber() != lastTypeAsked)
 			{
 				pass = true;

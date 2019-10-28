@@ -70,7 +70,7 @@ public class StandardPlayer implements Player
 		return currentHand;
 	}
 	
-	public int getSizeOfHand()
+	public int getHandSize()
 	{
 		return currentHand.size();
 	}
@@ -146,7 +146,7 @@ public class StandardPlayer implements Player
 	 */
 	public Card getLastDrawnCard()
 	{
-		return currentHand.get(getSizeOfHand()-1);
+		return currentHand.get(getHandSize()-1);
 	}
 	
 	/**

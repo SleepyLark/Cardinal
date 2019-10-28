@@ -37,7 +37,7 @@ public class GoFishMaster extends GameMaster
 		int numberType = cardYouWant.getNumber();
 		ArrayList<PlayingCard> cardsToTake = new ArrayList<PlayingCard>();
 		
-		for(int index = 0; index < personToPick.getSizeOfHand(); index++)
+		for(int index = 0; index < personToPick.getHandSize(); index++)
 		{
 			if(((PlayingCard) personToPick.getCurrentHand().get(index)).getNumber() == numberType)
 			{
@@ -59,7 +59,7 @@ public class GoFishMaster extends GameMaster
 		boolean hasSet = false;
 		
 		//backwards for loop of player's hand 
-		for(int index = personToCheck.getSizeOfHand()-1; index >=0; index--)
+		for(int index = personToCheck.getHandSize()-1; index >=0; index--)
 		{
 			//starts at the beginning and searches each card after it if it's the same
 			//else it will move to the next index

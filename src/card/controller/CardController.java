@@ -7,6 +7,7 @@ import card.model.*;
 import card.model.bots.FishBot;
 import card.model.cards.PlayingCard;
 import card.model.dealers.StandardDealer;
+import card.model.games.GarbageMaster;
 import card.model.games.GoFishMaster;
 import card.model.games.WarMaster;
 import card.model.players.StandardPlayer;
@@ -20,20 +21,23 @@ public class CardController
 	private WarMaster bowser;
 	private StandardPlayer playerOne;
 	private StandardPlayer playerTwo;
+	private GarbageMaster waluigi;
 
 	public CardController()
 	{
 		luigi = new StandardDealer(this);
 		toad = new GoFishMaster(this);
 		bowser = new WarMaster(this);
+		waluigi = new GarbageMaster(this);
 		playerTwo = new FishBot("Yoshi");
-
+		
 		luigi.buildDeck(false);
 
 	}
 
 	public void start()
 	{
+		waluigi.startGame();
 		// consoleWar();
 		//consoleGoFishTest();
 		// dummyScenario();
@@ -64,7 +68,7 @@ public class CardController
 		while (!luigi.getDrawDeck().isEmpty())
 		{
 			out("---------------------");
-			if (toad.getCurrentPlayer().getSizeOfHand() >= 4)
+			if (toad.getCurrentPlayer().getHandSize() >= 4)
 			{
 				if (toad.hasASet((StandardPlayer) toad.getCurrentPlayer()))
 					out(toad.getCurrentPlayer() + " got a point!");
@@ -78,9 +82,9 @@ public class CardController
 				out("Last card drawn: " + playerOne.getLastDrawnCard());
 				playerOne.organizeHand(Type.NUMBER);
 				out(playerOne.getCurrentHand());
-				out("Size: " + playerOne.getSizeOfHand());
+				out("Size: " + playerOne.getHandSize());
 
-				if (playerOne.getSizeOfHand() > 0)
+				if (playerOne.getHandSize() > 0)
 				{
 					
 					boolean valid = false;
@@ -89,7 +93,7 @@ public class CardController
 					{
 						out("Ask for card:");
 						cardIndex = consoleIn.nextInt();
-						if(cardIndex > playerOne.getSizeOfHand() || cardIndex < 0)
+						if(cardIndex > playerOne.getHandSize() || cardIndex < 0)
 						{
 							out("Card doesn't exist! Try again.");
 						}
@@ -135,7 +139,7 @@ public class CardController
 			}
 			else
 			{
-				if (playerTwo.getSizeOfHand() > 0)
+				if (playerTwo.getHandSize() > 0)
 				{
 					PlayingCard cardWanted = ((FishBot) playerTwo).takeTurn();
 					out("got any " + cardWanted.getNumber() + "'s?");
@@ -200,13 +204,13 @@ public class CardController
 			playerTwo.addToHand(luigi.drawACard());
 		}
 
-		while (playerOne.getSizeOfHand() > 0 && playerTwo.getSizeOfHand() > 0)
+		while (playerOne.getHandSize() > 0 && playerTwo.getHandSize() > 0)
 		{
 			out(bowser.battle(playerOne, playerTwo) + " wins the battle!");
 			turnCount++;
 		}
 
-		if (playerOne.getSizeOfHand() > playerTwo.getSizeOfHand())
+		if (playerOne.getHandSize() > playerTwo.getHandSize())
 		{
 			out(playerOne + " is the victor!");
 
@@ -230,14 +234,14 @@ public class CardController
 		out(toad.getCurrentPlayer() + " starts.");
 		playerOne.addToHand(luigi.drawACard());
 		out(toad.getCurrentPlayer() + " draws a card.");
-		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getSizeOfHand() - 1));
+		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getHandSize() - 1));
 		out(toad.getCurrentPlayer().getCurrentHand());
-		out(toad.getCurrentPlayer() + " plays a(n) " + luigi.discardACard(toad.getCurrentPlayer().discardCard(luigi.getRandomInt(0, toad.getCurrentPlayer().getSizeOfHand()))));
+		out(toad.getCurrentPlayer() + " plays a(n) " + luigi.discardACard(toad.getCurrentPlayer().discardCard(luigi.getRandomInt(0, toad.getCurrentPlayer().getHandSize()))));
 		out(luigi.getDiscardPile());
 		toad.next();
 		out("It's now " + toad.getCurrentPlayer() + "'s turn");
 		out(toad.getCurrentPlayer() + " draws a card.");
-		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getSizeOfHand() - 1));
+		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getHandSize() - 1));
 		out(toad.getCurrentPlayer().getCurrentHand());
 		out(toad.getCurrentPlayer() + " ends their turn.");
 		toad.next();

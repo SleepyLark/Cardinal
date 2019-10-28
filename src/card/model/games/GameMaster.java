@@ -52,6 +52,16 @@ public abstract class GameMaster
 	}
 	
 	/**
+	 * get's a player from the roaster based on where it's located in the list
+	 * @param index position in the turn order
+	 * @return the player from that position
+	 */
+	public Player getPlayer(int index)
+	{
+		return playerOrder.get(index);
+	}
+	
+	/**
 	 * set whose turn it is based off of player
 	 * @param personsTurn the player whose turn it should be
 	 */

@@ -13,6 +13,10 @@ public class GarbageMaster extends GameMaster
 
 	private CardController app;
 	private int[] playerHandSize;
+	/**
+	 * tells if the card has been flipped over or not
+	 */
+	private boolean[][] playerHandStatus;
 	private int maxHandSize;
 	private StandardDealer deck;
 	/**
@@ -56,6 +60,16 @@ public class GarbageMaster extends GameMaster
 				playerHandSize[index] = maxHandSize;
 			}
 			
+			playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
+			
+			for (int player = 0; player < playerHandStatus.length; player++)
+			{
+				for(int index = 0; index < playerHandStatus[0].length; index++)
+				{
+					playerHandStatus[player][index] = false;
+				}
+			}
+			
 			deck.buildDeck();
 			deck.dealCards(this.getPlayers(), maxHandSize);
 			deck.discardACard(deck.drawACard());
@@ -69,9 +83,20 @@ public class GarbageMaster extends GameMaster
 				if(response.equals("discard"))
 				{
 				
-					this.evaluteCard((PlayingCard)deck.getDiscardPile().get(0));
+					this.evaluteCard((PlayingCard)deck.drawFromDiscard());
+				}
+				else
+				{
+					this.evaluteCard((PlayingCard)deck.drawACard());
 				}
 			}
+			
+			if(wonRound(this.getCurrentTurn()))
+			{
+				app.out(this.getCurrentPlayer() +" has won the round!");
+			}
+			
+			this.next();
 			
 			
 			
@@ -82,11 +107,63 @@ public class GarbageMaster extends GameMaster
 	{
 		boolean works = false;
 		
-		if(cardToCheck.getNumber() > playerHandSize[this.getCurrentTurn()] || cardToCheck.getNumber() == PlayingCard.JACK)
+		if(cardToCheck.getNumber() <= playerHandSize[this.getCurrentTurn()] || cardToCheck.getNumber() == PlayingCard.JACK)
 		{
-		
+			
+			int cardSlot = cardToCheck.getNumber()-1;
+			if(cardToCheck.getNumber() == PlayingCard.JACK)
+			{
+				app.out("Lucky you! You got a Jack! Where do you want to put it?");
+				cardSlot = consoleIn.nextInt();
+				if(playerHandStatus[this.getCurrentTurn()][cardSlot] == true)
+				{
+					this.getCurrentPlayer().addToHand(cardSlot, cardToCheck);
+					evaluteCard((PlayingCard)this.getCurrentPlayer().discardCard(cardSlot+1));
+				}
+			}
+			
+			if(playerHandStatus[this.getCurrentTurn()][cardSlot] == false)
+			{
+				this.getCurrentPlayer().addToHand(cardSlot, cardToCheck);
+				app.out("You got a " + cardToCheck);
+				playerHandStatus[this.getCurrentTurn()][cardSlot] = true;
+				
+				evaluteCard((PlayingCard)this.getCurrentPlayer().discardCard(cardSlot+1));
+			}
+			else
+			{
+				app.out("That card has already been flipped! too bad");
+				deck.discardACard(cardToCheck);
+			}
 		}
 		
 		return works;
+	}
+	
+	private boolean wonRound(int playerIndex)
+	{
+		boolean winner = false;
+		int counter = 0;
+		
+		for(int index = 0; index < playerHandSize[playerIndex]; index++)
+		{
+			if(playerHandStatus[playerIndex][index] == true)
+			{
+				counter++;
+			}
+		}
+		
+		if(counter == playerHandSize[playerIndex])
+			winner = true;
+		
+		return winner;
+	}
+	
+	private void flipAllCardsLeft(int playerIndex)
+	{
+		for(int cardSlot = 0; cardSlot < this.getPlayer(playerIndex).getHandSize(); cardSlot++)
+		{
+			evaluteCard((PlayingCard)this.getPlayer(playerIndex).pickCard(cardSlot));
+		}
 	}
 }

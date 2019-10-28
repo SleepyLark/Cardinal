@@ -121,6 +121,15 @@ public abstract class Dealer
 	}
 	
 	/**
+	 * Removes a card from the discard pile
+	 * @return Draws the first cards from the discard pile
+	 */
+	public Card drawFromDiscard()
+	{
+		return discardPile.remove(0);
+	}
+	
+	/**
 	 *  adds a card to the discard pile
 	 * @param discard the card that goes in the discard pile
 	 * @return the card that got discarded

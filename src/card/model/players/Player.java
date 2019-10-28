@@ -18,7 +18,8 @@ public interface Player
 	public void loser();
 	public int getLoseCount();
 	public ArrayList<Card> getCurrentHand();
-	public int getSizeOfHand();
+	public int getHandSize();
+	public void addToHand(int index, Card cardToAdd);
 	public void addToHand(Card cardToAdd);
 	public Card getLastDrawnCard();
 	public Card discardCard(int index);
