@@ -230,6 +230,9 @@ public class GarbageMaster extends GameMaster
 	}
 	
 	private String debug()
+	protected void setupGame()
+	{
+	}
 	{
 		String stats = "==[DEBUG]==\n";
 		stats += "Turn Count: " + this.getTurnCount();

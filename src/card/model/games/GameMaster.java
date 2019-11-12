@@ -85,10 +85,14 @@ public abstract class GameMaster
 	}
 	
 	/**
-	 * Additional items needed to play the game
+	 * starts the game
 	 */
 	public abstract void startGame();
 	
+	/**
+	 * Additional items that need to be prepared before the actual gameplay starts
+	 */
+	protected abstract void setupGame();
 	
 	/**
 	 * switches to the next player

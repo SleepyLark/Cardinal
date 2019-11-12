@@ -22,7 +22,10 @@ public class GoFishMaster extends GameMaster
 	 */
 	public void startGame()
 	{
+	protected void setupGame()
+	{
 		scoreSheet = new int[this.numberOfPlayers()];
+	}
 	}
 	
 	
