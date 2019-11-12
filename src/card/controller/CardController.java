@@ -71,18 +71,18 @@ public class CardController
 			playerTwo.addToHand(luigi.draw());
 		}
 
-		out(toad.getCurrentPlayer() + " starts first");
+		out(toad.currentPlayer() + " starts first");
 		while (!luigi.isDrawDeckEmpty())
 		{
 			out("---------------------");
-			if (toad.getCurrentPlayer().getHandSize() >= 4)
+			if (toad.currentPlayer().getHandSize() >= 4)
 			{
-				if (toad.hasASet((StandardPlayer) toad.getCurrentPlayer()))
-					out(toad.getCurrentPlayer() + " got a point!");
+				if (toad.hasASet((StandardPlayer) toad.currentPlayer()))
+					out(toad.currentPlayer() + " got a point!");
 			}
 
-			out(toad.getCurrentPlayer() + "'s score: " + toad.getScore((StandardPlayer) toad.getCurrentPlayer()));
-			if (toad.getCurrentPlayer() == playerOne)
+			out(toad.currentPlayer() + "'s score: " + toad.getScore((StandardPlayer) toad.currentPlayer()));
+			if (toad.currentPlayer() == playerOne)
 			{
 
 				out("Your hand:");
@@ -175,7 +175,7 @@ public class CardController
 			}
 
 			toad.next();
-			out("It's now " + toad.getCurrentPlayer() + "'s turn");
+			out("It's now " + toad.currentPlayer() + "'s turn");
 		}
 
 		out("Game over.");
@@ -241,24 +241,24 @@ public class CardController
 		out(playerOne.getCurrentHand());
 		out(playerTwo.getUsername() + "'s hand:");
 		out(playerTwo.getCurrentHand());
-		out(toad.getCurrentPlayer() + " starts.");
+		out(toad.currentPlayer() + " starts.");
 		playerOne.addToHand(luigi.draw());
-		out(toad.getCurrentPlayer() + " draws a card.");
-		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getHandSize() - 1));
-		out(toad.getCurrentPlayer().getCurrentHand());
-		out(toad.getCurrentPlayer() + " plays a(n) " + luigi.discard(toad.getCurrentPlayer().discardCard(luigi.randomInt(0, toad.getCurrentPlayer().getHandSize()))));
+		out(toad.currentPlayer() + " draws a card.");
+		out(toad.currentPlayer() + " drew a(n) " + toad.currentPlayer().getCurrentHand().get(toad.currentPlayer().getHandSize() - 1));
+		out(toad.currentPlayer().getCurrentHand());
+		out(toad.currentPlayer() + " plays a(n) " + luigi.discard(toad.currentPlayer().discardCard(luigi.randomInt(0, toad.currentPlayer().getHandSize()))));
 		toad.next();
-		out("It's now " + toad.getCurrentPlayer() + "'s turn");
-		out(toad.getCurrentPlayer() + " draws a card.");
-		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getHandSize() - 1));
-		out(toad.getCurrentPlayer().getCurrentHand());
-		out(toad.getCurrentPlayer() + " ends their turn.");
+		out("It's now " + toad.currentPlayer() + "'s turn");
+		out(toad.currentPlayer() + " draws a card.");
+		out(toad.currentPlayer() + " drew a(n) " + toad.currentPlayer().getCurrentHand().get(toad.currentPlayer().getHandSize() - 1));
+		out(toad.currentPlayer().getCurrentHand());
+		out(toad.currentPlayer() + " ends their turn.");
 		toad.next();
-		out("It is now " + toad.getCurrentPlayer() + "'s turn.");
-		out(toad.getCurrentPlayer() + " flips the table in rage.");
+		out("It is now " + toad.currentPlayer() + "'s turn.");
+		out(toad.currentPlayer() + " flips the table in rage.");
 		toad.next();
-		out("It looks like " + toad.getCurrentPlayer() + " is the winner");
-		toad.getCurrentPlayer().winner();
+		out("It looks like " + toad.currentPlayer() + " is the winner");
+		toad.currentPlayer().winner();
 		out(playerOne + ": " + playerOne.getWinCount());
 		out(playerTwo + ": " + playerTwo.getWinCount());
 

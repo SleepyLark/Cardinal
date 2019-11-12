@@ -46,7 +46,7 @@ public abstract class GameMaster
 	 * get the current players turn
 	 * @return whose turn it is
 	 */
-	public Player getCurrentPlayer()
+	public Player currentPlayer()
 	{
 		return playerOrder.get(currentTurn);
 	}

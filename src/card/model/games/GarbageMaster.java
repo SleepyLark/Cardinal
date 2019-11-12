@@ -92,10 +92,10 @@ public class GarbageMaster extends GameMaster
 		while (!gameOver)
 		{
 			//app.out(debug());
-			app.out("It is now " + this.getCurrentPlayer() + "'s turn.");
-			app.out(printHand());
+			app.out("It is now " + currentPlayer() + "'s turn.");
+			printHand();
 			app.out("Discard Pile: " + deck.discardPeek());
-			if (this.getCurrentPlayer() == playerOne)
+			if (!(currentPlayer().isBot()))
 			{
 				app.out("Which deck do you want to draw?");
 				String response = consoleIn.next();
@@ -111,7 +111,7 @@ public class GarbageMaster extends GameMaster
 			}
 			else
 			{
-				if (this.getCurrentPlayer().isBot() && ((TrashBot) this.getCurrentPlayer()).turn(deck.discardPeek(), playerHandStatus(this.getCurrentTurn())) == TrashBot.TAKE_FROM_DISCARD)
+				if (((TrashBot) currentPlayer()).turn(deck.discardPeek(), playerHandStatus(getCurrentTurn())) == TrashBot.TAKE_FROM_DISCARD)
 				{
 					this.evaluteCard( deck.drawFromDiscardPile());
 				}
@@ -121,10 +121,10 @@ public class GarbageMaster extends GameMaster
 				}
 			}
 
-			if (wonRound(this.getCurrentTurn()))
+			if (wonRound(getCurrentTurn()))
 			{
-				app.out(this.getCurrentPlayer() + " has won the round!");
-				this.getCurrentPlayer().winner();
+				app.out(currentPlayer() + " has won the round!");
+				currentPlayer().winner();
 				int winner = this.getCurrentTurn();
 				this.next();
 				while (this.getCurrentTurn() != winner)
@@ -132,7 +132,7 @@ public class GarbageMaster extends GameMaster
 
 					this.flipAllCardsLeft(this.getCurrentTurn());
 					if (wonRound(this.getCurrentTurn()))
-						app.out(this.getCurrentPlayer() + " also won!");
+						app.out(this.currentPlayer() + " also won!");
 					this.next();
 				}
 
@@ -149,7 +149,7 @@ public class GarbageMaster extends GameMaster
 		app.out(printHand());
 		
 		PlayingCard cardToCheck = (PlayingCard) card;
-		StandardPlayer currentPlayer = (StandardPlayer)this.getCurrentPlayer();
+		StandardPlayer currentPlayer = (StandardPlayer)this.currentPlayer();
 		int playerIndex = this.getCurrentTurn();
 
 		if (!wonRound(playerIndex) && (cardToCheck.getNumber() <= playerHandSize[playerIndex] || cardToCheck.getNumber() == PlayingCard.JACK))
@@ -185,7 +185,7 @@ public class GarbageMaster extends GameMaster
 					evaluteCard(currentPlayer.discardCard(cardSlot + 1));
 				}
 					
-				app.out(this.getCurrentPlayer() + " got a "+ cardToCheck+ ", but that card has already been flipped! too bad");
+				app.out(this.currentPlayer() + " got a "+ cardToCheck+ ", but that card has already been flipped! too bad");
 				deck.discard(card);
 			}
 		}
@@ -234,11 +234,11 @@ public class GarbageMaster extends GameMaster
 		String stats = "==[DEBUG]==\n";
 		stats += "Turn Count: " + this.getTurnCount();
 		stats += "\nCurrent Turn position: " + this.getCurrentTurn();
-		stats += "\nPlayer: "+this.getCurrentPlayer();
+		stats += "\nPlayer: "+this.currentPlayer();
 		stats += "\nHand:\n";
 		for(int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
 		{
-			stats += "["+index+"]: " + getCurrentPlayer().pickCard(index) + " \tFlipped?: " + playerHandStatus[this.getCurrentTurn()][index] +"\n";
+			stats += "["+index+"]: " + currentPlayer().pickCard(index) + " \tFlipped?: " + playerHandStatus[this.getCurrentTurn()][index] +"\n";
 			
 		}
 		stats += "Size: " + playerHandSize[this.getCurrentTurn()];
@@ -255,7 +255,7 @@ public class GarbageMaster extends GameMaster
 		{
 			stats += "["+index+"]: ";
 			if(playerHandStatus[this.getCurrentTurn()][index])
-				stats += this.getCurrentPlayer().pickCard(index) + "\n";
+				stats += this.currentPlayer().pickCard(index) + "\n";
 			else
 				stats += "????\n";
 		}
