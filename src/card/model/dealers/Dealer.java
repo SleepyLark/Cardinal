@@ -17,6 +17,8 @@ public abstract class Dealer
 	protected ArrayList<Card> drawDeck;
 	protected ArrayList<Card> discardPile;
 	private CardController app;
+	private Card lastCardDrawn;
+	private Card lastCardDiscarded;
 
 	public Dealer(CardController app)
 	{
@@ -24,6 +26,8 @@ public abstract class Dealer
 
 		drawDeck = new ArrayList<Card>();
 		discardPile = new ArrayList<Card>();
+		lastCardDrawn = null;
+		lastCardDiscarded = null;
 
 	}
 	
@@ -31,20 +35,29 @@ public abstract class Dealer
 	 * builds the deck of cards needed for the game;
 	 */
 	public abstract void buildDeck();
-
+	
 	/**
-	 * "Shuffles" the deck <br><i>maybe do some more complex shuffling?</i>
+	 * get a random integer (faster than doing Math.random() and casting it).
+	 * @param min the lowest possible value
+	 * @param max the highest possible value
+	 * @return a random integer
 	 */
-	private void shuffle()
+	public static int randomInt(int min, int max)
 	{
-		ArrayList<Card> temp = new ArrayList<Card>();
-
-		while (!drawDeck.isEmpty())
-		{
-			temp.add(drawDeck.remove(getRandomInt(0, drawDeck.size())));
-		}
+		return (int) (Math.random() * max) + min;
+	}
+	
+	/**
+	 * "shuffles" the cards a random amount of times
+	 */
+	public void shuffleCards()
+	{
+		int shuffleAmount = randomInt(1,5);
 		
-		drawDeck = temp;
+		for(int times = 0; times < shuffleAmount; times++)
+		{
+			shuffle();
+		}
 	}
 	
 	/**
@@ -58,18 +71,20 @@ public abstract class Dealer
 		}
 		shuffleCards();
 	}
-
+	
 	/**
-	 * "shuffles" the cards a random amount of times
+	 * "Shuffles" the deck <br><i>maybe do some more complex shuffling?</i>
 	 */
-	public void shuffleCards()
+	private void shuffle()
 	{
-		int shuffleAmount = getRandomInt(1,5);
-		
-		for(int times = 0; times < shuffleAmount; times++)
+		ArrayList<Card> temp = new ArrayList<Card>();
+
+		while (!drawDeck.isEmpty())
 		{
-			shuffle();
+			temp.add(drawDeck.remove(randomInt(0, drawDeck.size())));
 		}
+		
+		drawDeck = temp;
 	}
 	
 	/**
@@ -85,78 +100,126 @@ public abstract class Dealer
 			for(Player currentPlayer : players)
 			{
 				if(!drawDeck.isEmpty())
-				currentPlayer.addToHand(this.drawACard());
+				currentPlayer.addToHand(this.draw());
 			}
 		}
 	}
 
 	/**
-	 * get a random integer (faster than doing Math.random() and casting it).
-	 * @param min the lowest possible value
-	 * @param max the highest possible value
-	 * @return a random integer
-	 */
-	public static int getRandomInt(int min, int max)
-	{
-		return (int) (Math.random() * max) + min;
-	}
-
-	public ArrayList<Card> getDrawDeck()
-	{
-		return drawDeck;
-	}
-	
-	public ArrayList<Card> getDiscardPile()
-	{
-		return discardPile;
-	}
-	
-	/**
 	 * Removes a card from the draw deck
 	 * @return the first card from the draw deck
 	 */
-	public Card drawACard()
+	public Card draw()
 	{
-		return drawDeck.remove(0);
+		lastCardDrawn = drawDeck.remove(0);
+		return lastCardDrawn;
 	}
 	
 	/**
 	 * Removes a card from the discard pile
 	 * @return Draws the first cards from the discard pile
 	 */
-	public Card drawFromDiscard()
+	public Card drawFromDiscardPile()
 	{
-		return discardPile.remove(0);
+		lastCardDiscarded = discardPile.remove(0);
+		return lastCardDiscarded;
 	}
 	
-	/**
-	 * looks at the first card in the discard pile (NOTE: Does not removes the card)
-	 * @return the last card added to the discard pile
-	 */
-	public Card peekFromDiscard()
-	{
-		return discardPile.get(0);
-	}
 	
 	/**
 	 *  adds a card to the discard pile
 	 * @param discard the card that goes in the discard pile
 	 * @return the card that got discarded
 	 */
-	public Card discardACard(Card discard)
+	public Card discard(Card discard)
 	{
 		discardPile.add(0,discard);
 		return discard;
 	}
 	
-	public int getDrawDeckSize()
+	//====[DECK INFO]====
+	//Methods that provide information but doesn't necessarily alter it
+	
+	
+	/**
+	 * looks at the first card in the discard pile (NOTE: Does not removes the card)
+	 * @return the last card added to the discard pile
+	 */
+	public Card discardPeek()
+	{
+		return discardPile.get(0);
+	}
+	
+	/**
+	 * looks at the first card in the draw deck (NOTE: Does not removes the card)
+	 * @return the first card in the draw deck
+	 */
+	public Card drawPeek()
+	{
+		return drawDeck.get(0);
+	}
+	
+	public boolean isDrawDeckEmpty()
+	{
+		return drawDeck.isEmpty();
+	}
+	
+	public boolean isDiscardPileEmpty()
+	{
+		return discardPile.isEmpty();
+	}
+	
+	/**
+	 * 
+	 * @return size of drawDeck
+	 */
+	public int deckSize()
 	{
 		return drawDeck.size();
 	}
 	
-	public int getDiscardPileSize()
+	/**
+	 * 
+	 * @return size of discardPile
+	 */
+	public int discardSize()
 	{
 		return discardPile.size();
+	}
+	
+	//====[DEBUG]====
+	//Shows current status
+	
+	private String readableList(ArrayList<Card> list, int limit)
+	{
+		String desc = "";
+		for(int index = 0; index < limit; index ++)
+		{
+			desc += (index + 1) +":/t" + list.get(index) + "/n";
+		}
+		
+		return desc;
+	}
+	public void drawDebug(int numberOfCardsToShow)
+	{
+		if(numberOfCardsToShow > deckSize() || numberOfCardsToShow < 0)
+		{
+			numberOfCardsToShow = deckSize();
+		}
+		app.out("====[DRAW DECK DEBUG]====");
+		app.out("Last card drawn: " + lastCardDrawn);
+		app.out("Cards still in deck:/n" + readableList(drawDeck,numberOfCardsToShow));
+	}
+	
+	public void discardDebug(int numberOfCardsToShow)
+	{
+		if(numberOfCardsToShow > discardSize() || numberOfCardsToShow < 0)
+		{
+			numberOfCardsToShow = discardSize();
+		}
+		app.out("====[DISCARD PILE DEBUG]====");
+		app.out("Last card discarded: " + lastCardDiscarded);
+		app.out("Cards still in pile:/n" + readableList(discardPile,numberOfCardsToShow));
 	}
 
 }

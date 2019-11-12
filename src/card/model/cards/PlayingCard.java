@@ -23,17 +23,6 @@ public class PlayingCard implements Card
 		cardSuit = type;
 		this.number = number;
 	}
-
-	public int getNumber()
-	{
-		return number;
-	}
-
-	public Suit getSuit()
-	{
-		return cardSuit;
-	}
-
 	public boolean isFaceCard()
 	{
 		boolean face = false;
@@ -70,7 +59,7 @@ public class PlayingCard implements Card
 		return black;
 	}
 
-	public String faceToString()
+	private String faceToString()
 	{
 		String desc = null;
 		if(number == ACE)
@@ -93,14 +82,25 @@ public class PlayingCard implements Card
 		return desc;
 	}
 	
-	public String suitToString()
+	private String suitToString()
 	{
 		String desc = cardSuit+"";
 		
-		desc = desc.substring(0,1).toUpperCase() + desc.substring(1).toLowerCase();
+		desc = desc.substring(0,1).toUpperCase() + desc.substring(1).toLowerCase(); //makes the enum name readable
 		
 		return desc;
 	}
+	
+	public int getNumber()
+	{
+		return number;
+	}
+
+	public Suit getSuit()
+	{
+		return cardSuit;
+	}
+
 
 	public String toString()
 	{

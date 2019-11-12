@@ -62,5 +62,12 @@ public class WarMaster extends GameMaster
 			personWhoWon.addToHand(pot.remove(index));
 		}
 	}
+
+	@Override
+	public void startGame()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

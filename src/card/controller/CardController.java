@@ -42,12 +42,19 @@ public class CardController
 		//consoleGoFishTest();
 		// dummyScenario();
 	}
-
+	
+	/**
+	 * A quick way to print to the console.  Useful for quick debugging
+	 * @param message The thing you want to send to the console.
+	 */
 	public void out(Object message)
 	{
 		System.out.println(message);
 	}
 
+	/*
+	 * a test scenario, TODO: re-implement this for GoFishMaster
+	 */
 	public void consoleGoFishTest()
 	{
 		Scanner consoleIn = new Scanner(System.in);
@@ -60,12 +67,12 @@ public class CardController
 		toad.startGame();
 		for (int times = 0; times < 7; times++)
 		{
-			playerOne.addToHand(luigi.drawACard());
-			playerTwo.addToHand(luigi.drawACard());
+			playerOne.addToHand(luigi.draw());
+			playerTwo.addToHand(luigi.draw());
 		}
 
 		out(toad.getCurrentPlayer() + " starts first");
-		while (!luigi.getDrawDeck().isEmpty())
+		while (!luigi.isDrawDeckEmpty())
 		{
 			out("---------------------");
 			if (toad.getCurrentPlayer().getHandSize() >= 4)
@@ -110,9 +117,9 @@ public class CardController
 					if (cards.size() == 0)
 					{
 						out("Go fish");
-						if (luigi.getDrawDeckSize() > 0)
+						if (luigi.deckSize() > 0)
 						{
-							playerOne.addToHand(luigi.drawACard());
+							playerOne.addToHand(luigi.draw());
 						}
 						else
 						{
@@ -125,10 +132,10 @@ public class CardController
 						playerOne.addToHand(cards);
 					}
 				}
-				else if (luigi.getDrawDeckSize() != 0)
+				else if (luigi.deckSize() != 0)
 				{
 					out("You're out of card! Draw another one");
-					playerOne.addToHand(luigi.drawACard());
+					playerOne.addToHand(luigi.draw());
 
 				}
 				else
@@ -149,8 +156,8 @@ public class CardController
 					if (cards.size() == 0)
 					{
 						out("Go fish");
-						if (luigi.getDrawDeckSize() > 0)
-							playerTwo.addToHand(luigi.drawACard());
+						if (luigi.deckSize() > 0)
+							playerTwo.addToHand(luigi.draw());
 
 					}
 					else
@@ -162,7 +169,7 @@ public class CardController
 				else
 				{
 					out(playerTwo + " ran out of cards! They must draw one.");
-					playerTwo.addToHand(luigi.drawACard());
+					playerTwo.addToHand(luigi.draw());
 				}
 
 			}
@@ -200,8 +207,8 @@ public class CardController
 		bowser.addToGame(playerTwo);
 		for (int times = 0; times < 26; times++)
 		{
-			playerOne.addToHand(luigi.drawACard());
-			playerTwo.addToHand(luigi.drawACard());
+			playerOne.addToHand(luigi.draw());
+			playerTwo.addToHand(luigi.draw());
 		}
 
 		while (playerOne.getHandSize() > 0 && playerTwo.getHandSize() > 0)
@@ -223,6 +230,9 @@ public class CardController
 		out("Turns taken: " + turnCount);
 	}
 
+	/*
+	 * A method I used to first debug my initial logic, may delete later
+	 */
 	public void dummyScenario()
 	{
 		out("Current Players:");
@@ -232,12 +242,11 @@ public class CardController
 		out(playerTwo.getUsername() + "'s hand:");
 		out(playerTwo.getCurrentHand());
 		out(toad.getCurrentPlayer() + " starts.");
-		playerOne.addToHand(luigi.drawACard());
+		playerOne.addToHand(luigi.draw());
 		out(toad.getCurrentPlayer() + " draws a card.");
 		out(toad.getCurrentPlayer() + " drew a(n) " + toad.getCurrentPlayer().getCurrentHand().get(toad.getCurrentPlayer().getHandSize() - 1));
 		out(toad.getCurrentPlayer().getCurrentHand());
-		out(toad.getCurrentPlayer() + " plays a(n) " + luigi.discardACard(toad.getCurrentPlayer().discardCard(luigi.getRandomInt(0, toad.getCurrentPlayer().getHandSize()))));
-		out(luigi.getDiscardPile());
+		out(toad.getCurrentPlayer() + " plays a(n) " + luigi.discard(toad.getCurrentPlayer().discardCard(luigi.randomInt(0, toad.getCurrentPlayer().getHandSize()))));
 		toad.next();
 		out("It's now " + toad.getCurrentPlayer() + "'s turn");
 		out(toad.getCurrentPlayer() + " draws a card.");

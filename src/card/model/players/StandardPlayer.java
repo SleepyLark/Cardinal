@@ -198,6 +198,11 @@ public class StandardPlayer implements Player
 		}
 	}
 	
+	public boolean isBot()
+	{
+		return false;
+	}
+	
 	public String toString()
 	{
 		return username;

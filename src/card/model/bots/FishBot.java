@@ -4,7 +4,7 @@ import card.model.cards.PlayingCard;
 import card.model.dealers.Dealer;
 import card.model.players.StandardPlayer;
 
-public class FishBot extends StandardPlayer
+public class FishBot extends StandardBot
 {
 	private int lastTypeAsked;
 
@@ -21,7 +21,7 @@ public class FishBot extends StandardPlayer
 		boolean pass = false;
 		while (pass == false)
 		{
-			int cardIndex = Dealer.getRandomInt(0, this.getHandSize() - 1);
+			int cardIndex = Dealer.randomInt(0, this.getHandSize() - 1);
 			if (((PlayingCard) this.pickCard(cardIndex)).getNumber() != lastTypeAsked)
 			{
 				pass = true;
