@@ -53,14 +53,6 @@ public class CardController
 	}
 
 	/*
-	 * a test scenario, TODO: re-implement this for GoFishMaster
-	 */
-	public void consoleGoFishTest()
-	{
-		
-	}
-
-	/*
 	 * Lol this thing doesn't work
 	 */
 	public void consoleWar()

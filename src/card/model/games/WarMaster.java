@@ -69,5 +69,12 @@ public class WarMaster extends GameMaster
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected void setupGame()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
