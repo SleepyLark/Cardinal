@@ -20,6 +20,7 @@ public class GarbageMaster extends GameMaster
 	private boolean[][] playerHandStatus;
 	private int maxHandSize;
 	private StandardDealer deck;
+	private StandardPlayer playerOne;
 	/**
 	 * for debugging, subjected to change
 	 */
@@ -33,6 +34,7 @@ public class GarbageMaster extends GameMaster
 		this.app = app;
 		this.maxHandSize = 10;
 		deck = new StandardDealer(app);
+		playerOne = null;
 		consoleIn = new Scanner(System.in);
 		gameOver = false;
 	}
@@ -40,55 +42,9 @@ public class GarbageMaster extends GameMaster
 	@Override
 	public void startGame()
 	{
-		boolean error = true;
-		int cpuPlayers = 0;
-
-		app.out("Enter name:");
-		StandardPlayer playerOne = new StandardPlayer(consoleIn.nextLine());
-		this.addToGame(playerOne);
-
-		while (error)
-		{
-			app.out("How many CPU players?");
-			cpuPlayers = consoleIn.nextInt();
-
-			if (this.numberOfPlayers() < 1)
-			{
-				app.out("Invalid number of players.");
-			}
-			else
-				error = false;
-		}
-
-		for (int times = 0; times < cpuPlayers; times++)
-		{
-			this.addToGame(new TrashBot(null));
-		}
-
-		playerHandSize = new int[this.numberOfPlayers()];
-
-		for (int index = 0; index < playerHandSize.length; index++)
-		{
-			playerHandSize[index] = maxHandSize;
-		}
-
-		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
-
-		for (int player = 0; player < playerHandStatus.length; player++)
-		{
-			for (int index = 0; index < playerHandStatus[0].length; index++)
-			{
-				playerHandStatus[player][index] = false;
-			}
-		}
-
-		deck.buildDeck();
-		deck.shuffleCards();
-		deck.shuffleCards();
-		app.out("deck size " + deck.deckSize());
-		deck.dealCards(this.getPlayers(), maxHandSize);
-		deck.discard(deck.draw());
-
+		
+		setupGame();
+	
 		while (!gameOver)
 		{
 			//app.out(debug());
@@ -146,7 +102,7 @@ public class GarbageMaster extends GameMaster
 	private void evaluteCard(Card card)
 	{
 	
-		app.out(printHand());
+		printHand();
 		
 		PlayingCard cardToCheck = (PlayingCard) card;
 		StandardPlayer currentPlayer = (StandardPlayer)this.currentPlayer();
@@ -229,10 +185,66 @@ public class GarbageMaster extends GameMaster
 		}
 	}
 	
-	private String debug()
+	/**
+	 * adds players and deals out cards
+	 */
 	protected void setupGame()
 	{
+		app.out("Enter name:");
+		playerOne = new StandardPlayer(consoleIn.nextLine());
+		this.addToGame(playerOne);
+
+		addBotPlayers();
+
+		playerHandSize = new int[this.numberOfPlayers()];
+
+		for (int index = 0; index < playerHandSize.length; index++)
+		{
+			playerHandSize[index] = maxHandSize;
+		}
+
+		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
+
+		for (int player = 0; player < playerHandStatus.length; player++)
+		{
+			for (int index = 0; index < playerHandStatus[0].length; index++)
+			{
+				playerHandStatus[player][index] = false;
+			}
+		}
+
+		deck.buildDeck();
+		deck.shuffleCards();
+		app.out("deck size " + deck.deckSize());//debug
+		deck.dealCards(this.getPlayers(), maxHandSize);
+		deck.discard(deck.draw());
 	}
+	
+	private void addBotPlayers()
+	{
+		boolean error = true;
+		int cpuPlayers = 0;
+		
+		while (error)
+		{
+			app.out("How many CPU players?");
+			cpuPlayers = consoleIn.nextInt();
+
+			if (this.numberOfPlayers() < 1)
+			{
+				app.out("Invalid number of players.");
+			}
+			else
+				error = false;
+		}
+
+		for (int times = 0; times < cpuPlayers; times++)
+		{
+			this.addToGame(new TrashBot(null));
+		}
+	}
+	
+	private void debug()
 	{
 		String stats = "==[DEBUG]==\n";
 		stats += "Turn Count: " + this.getTurnCount();
@@ -247,11 +259,11 @@ public class GarbageMaster extends GameMaster
 		stats += "Size: " + playerHandSize[this.getCurrentTurn()];
 		stats += "\n==========";
 		
-		return stats;
+		app.out(stats);
 		
 	}
 	
-	private String printHand()
+	private void printHand()
 	{
 		String stats = "Hand:\n";
 		for(int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
@@ -263,6 +275,6 @@ public class GarbageMaster extends GameMaster
 				stats += "????\n";
 		}
 		
-		return stats;
+		app.out(stats);
 	}
 }
