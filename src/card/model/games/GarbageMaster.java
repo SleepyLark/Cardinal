@@ -103,6 +103,8 @@ public class GarbageMaster extends GameMaster
 	{
 	
 		printHand();
+		this.debug();
+		app.out(card);
 		
 		PlayingCard cardToCheck = (PlayingCard) card;
 		StandardPlayer currentPlayer = (StandardPlayer)this.currentPlayer();
@@ -111,19 +113,31 @@ public class GarbageMaster extends GameMaster
 		if (!wonRound(playerIndex) && (cardToCheck.getNumber() <= playerHandSize[playerIndex] || cardToCheck.getNumber() == PlayingCard.JACK))
 		{
 			int cardSlot = cardToCheck.getNumber() - 1;
+			
+			//Jacks can be placed anywhere
 			if (cardToCheck.getNumber() == PlayingCard.JACK)
 			{
-				//TODO: make this block into a new method in order to identify the user vs the bot
-				app.out("Lucky you! You got a Jack! Where do you want to put it?");
-				cardSlot = consoleIn.nextInt();
-				if (playerHandStatus[playerIndex][cardSlot] == true)
+				if(!currentPlayer.isBot())
 				{
-					currentPlayer.addToHand(cardSlot, cardToCheck);
-					app.out("You put the Jack in the " +cardSlot+"'s place.\nFlipping card...");
-					evaluteCard(currentPlayer.discardCard(cardSlot + 1));
+					app.out("Lucky you! You got a Jack! Where do you want to put it?");
+					cardSlot = consoleIn.nextInt();
+					
+					//if the card has already been flipped, try again
+					if (playerHandStatus[playerIndex][cardSlot] == true)
+					{
+						app.out("There's no point to switch it there! Try again!");
+						evaluteCard(cardToCheck);
+					}
 				}
+				else
+				{
+					app.out(currentPlayer + " got a Jack!");
+					evaluteCard(((TrashBot)currentPlayer).processJack(playerHandStatus[playerIndex]));
+				}
+				
 			}
 
+			//if the card hasn't been flip, flip it and see what the other card is.
 			if (playerHandStatus[playerIndex][cardSlot] == false)
 			{
 				currentPlayer.addToHand(cardSlot, cardToCheck);
@@ -134,6 +148,7 @@ public class GarbageMaster extends GameMaster
 			}
 			else
 			{
+				//if the card flipped is a Jack and can be replace, swap it and reevaluate TODO: add new rule to lock cards in
 				if(((PlayingCard) currentPlayer.pickCard(cardSlot)).getNumber() == PlayingCard.JACK)
 				{
 					currentPlayer.addToHand(cardSlot, cardToCheck);
@@ -190,9 +205,9 @@ public class GarbageMaster extends GameMaster
 	 */
 	protected void setupGame()
 	{
-		app.out("Enter name:");
-		playerOne = new StandardPlayer(consoleIn.nextLine());
-		this.addToGame(playerOne);
+//		app.out("Enter name:");
+//		playerOne = new StandardPlayer(consoleIn.nextLine());
+//		this.addToGame(playerOne);
 
 		addBotPlayers();
 
@@ -215,7 +230,7 @@ public class GarbageMaster extends GameMaster
 
 		deck.buildDeck();
 		deck.shuffleCards();
-		app.out("deck size " + deck.deckSize());//debug
+		//app.out("deck size " + deck.deckSize());//debug
 		deck.dealCards(this.getPlayers(), maxHandSize);
 		deck.discard(deck.draw());
 	}
@@ -230,7 +245,7 @@ public class GarbageMaster extends GameMaster
 			app.out("How many CPU players?");
 			cpuPlayers = consoleIn.nextInt();
 
-			if (this.numberOfPlayers() < 1)
+			if (cpuPlayers < 1)
 			{
 				app.out("Invalid number of players.");
 			}

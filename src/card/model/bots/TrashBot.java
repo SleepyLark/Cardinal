@@ -19,4 +19,16 @@ public class TrashBot extends StandardBot
 		return DRAW_A_CARD;
 	}
 	
+	public Card processJack(boolean[] currentHand)
+	{
+		for(int index = 0; index < currentHand.length; index++)
+		{
+			if(!currentHand[index])
+			return this.discardCard(index);
+		}
+		
+		return null;
+		
+	}
+	
 }
