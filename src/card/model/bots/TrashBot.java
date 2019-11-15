@@ -3,7 +3,7 @@ package card.model.bots;
 import card.model.cards.Card;
 import card.model.players.StandardPlayer;
 
-public class TrashBot extends StandardPlayer
+public class TrashBot extends StandardBot
 {
 	public static int DRAW_A_CARD = 0;
 	public static int TAKE_FROM_DISCARD = 1;
