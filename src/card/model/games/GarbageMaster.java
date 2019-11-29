@@ -51,6 +51,15 @@ public class GarbageMaster extends GameMaster
 			app.out("It is now " + currentPlayer() + "'s turn.");
 			printHand();
 			app.out("Discard Pile: " + deck.discardPeek());
+			
+			if(deck.isDrawDeckEmpty())
+			{
+				Card temp = deck.drawFromDiscardPile();
+				deck.reshuffleDiscardPile();
+				app.out("Draw pile empty. Reshuffling...");
+				deck.discard(temp);
+			}
+			
 			if (!(currentPlayer().isBot()))
 			{
 				app.out("Which deck do you want to draw?");
@@ -72,6 +81,7 @@ public class GarbageMaster extends GameMaster
 					this.evaluteCard(deck.drawFromDiscardPile());
 				}
 				else if(!deck.isDrawDeckEmpty())
+				else 
 				{
 					this.evaluteCard(deck.draw());
 				}
