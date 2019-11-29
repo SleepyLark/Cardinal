@@ -25,6 +25,7 @@ public class GoFishMaster extends GameMaster
 	{
 		super();
 		this.app = app;
+		luigi = new StandardDealer(app);
 		consoleIn = new Scanner(System.in);
 	}
 	
