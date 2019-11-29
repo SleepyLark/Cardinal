@@ -25,7 +25,7 @@ public class GarbageMaster extends GameMaster
 	 * for debugging, subjected to change
 	 */
 	private Scanner consoleIn;
-	
+
 	private boolean gameOver;
 
 	public GarbageMaster(CardController app)
@@ -42,12 +42,12 @@ public class GarbageMaster extends GameMaster
 	@Override
 	public void startGame()
 	{
-		
+
 		setupGame();
-	
+
 		while (!gameOver)
 		{
-			//app.out(debug());
+			// app.out(debug());
 			app.out("It is now " + currentPlayer() + "'s turn.");
 			printHand();
 			app.out("Discard Pile: " + deck.discardPeek());
@@ -57,7 +57,7 @@ public class GarbageMaster extends GameMaster
 				String response = consoleIn.next();
 				if (response.equals("discard"))
 				{
-					
+
 					this.evaluteCard(deck.drawFromDiscardPile());
 				}
 				else
@@ -69,9 +69,9 @@ public class GarbageMaster extends GameMaster
 			{
 				if (((TrashBot) currentPlayer()).turn(deck.discardPeek(), playerHandStatus(getCurrentTurn())) == TrashBot.TAKE_FROM_DISCARD)
 				{
-					this.evaluteCard( deck.drawFromDiscardPile());
+					this.evaluteCard(deck.drawFromDiscardPile());
 				}
-				else
+				else if(!deck.isDrawDeckEmpty())
 				{
 					this.evaluteCard(deck.draw());
 				}
@@ -101,71 +101,76 @@ public class GarbageMaster extends GameMaster
 
 	private void evaluteCard(Card card)
 	{
-	
+
 		printHand();
-		this.debug();
+		// this.debug();
 		app.out(card);
-		
+
 		PlayingCard cardToCheck = (PlayingCard) card;
-		StandardPlayer currentPlayer = (StandardPlayer)this.currentPlayer();
+		StandardPlayer currentPlayer = (StandardPlayer) this.currentPlayer();
 		int playerIndex = this.getCurrentTurn();
 
-		if (!wonRound(playerIndex) && (cardToCheck.getNumber() <= playerHandSize[playerIndex] || cardToCheck.getNumber() == PlayingCard.JACK))
+		if (!wonRound(playerIndex) && ((cardToCheck.getNumber() <= playerHandSize[playerIndex]) || (cardToCheck.getNumber() == PlayingCard.JACK)))
 		{
 			int cardSlot = cardToCheck.getNumber() - 1;
-			
-			//Jacks can be placed anywhere
-			if (cardToCheck.getNumber() == PlayingCard.JACK)
+
+			// Jacks can be placed anywhere
+			if (cardSlot +1 == PlayingCard.JACK)
 			{
-				if(!currentPlayer.isBot())
+				if (!currentPlayer.isBot())
 				{
 					app.out("Lucky you! You got a Jack! Where do you want to put it?");
 					cardSlot = consoleIn.nextInt();
-					
-					//if the card has already been flipped, try again
-					if (playerHandStatus[playerIndex][cardSlot] == true)
-					{
-						app.out("There's no point to switch it there! Try again!");
-						evaluteCard(cardToCheck);
-					}
 				}
 				else
 				{
 					app.out(currentPlayer + " got a Jack!");
-					evaluteCard(((TrashBot)currentPlayer).processJack(playerHandStatus[playerIndex]));
+					cardSlot = ((TrashBot) currentPlayer).processJack(playerHandStatus[playerIndex]);
 				}
 				
+				// if the card has already been flipped, try again
+				if (playerHandStatus[playerIndex][cardSlot] == true)
+				{
+					app.out("There's no point to switch it there! Try again!");
+					evaluteCard(cardToCheck);
+				}
 			}
 
-			//if the card hasn't been flip, flip it and see what the other card is.
-			if (playerHandStatus[playerIndex][cardSlot] == false)
+			// if the card flipped is a Jack and can be replace, swap it and reevaluate
+			// TODO: add new rule to lock cards in
+			if (((PlayingCard) currentPlayer.pickCard(cardSlot)).getNumber() == PlayingCard.JACK)
 			{
 				currentPlayer.addToHand(cardSlot, cardToCheck);
-				app.out(currentPlayer + " got a(n) " + cardToCheck);
-				playerHandStatus[playerIndex][cardSlot] = true;
-				app.out("Flipping card...");
+				app.out("The Jack got swapped with a(n) " + cardToCheck);
 				evaluteCard(currentPlayer.discardCard(cardSlot + 1));
+
 			}
 			else
 			{
-				//if the card flipped is a Jack and can be replace, swap it and reevaluate TODO: add new rule to lock cards in
-				if(((PlayingCard) currentPlayer.pickCard(cardSlot)).getNumber() == PlayingCard.JACK)
+				// if the card hasn't been flip, flip it and see what the other card is.
+				if (playerHandStatus[playerIndex][cardSlot] == false)
 				{
 					currentPlayer.addToHand(cardSlot, cardToCheck);
-					app.out("The Jack got swapped with a(n) "+cardToCheck);
+					app.out(currentPlayer + " got a(n) " + cardToCheck);
+					playerHandStatus[playerIndex][cardSlot] = true;
+					app.out("Flipping card...");
 					evaluteCard(currentPlayer.discardCard(cardSlot + 1));
 				}
-					
-				app.out(this.currentPlayer() + " got a "+ cardToCheck+ ", but that card has already been flipped! too bad");
-				deck.discard(card);
+				else
+				{
+					app.out(this.currentPlayer() + " got a " + cardToCheck + ", but that card has already been flipped! too bad");
+					deck.discard(card);
+
+				}
+
 			}
 		}
 		else
 		{
-			app.out("It was a(n) "+ cardToCheck +"\nGarbage. Too bad.");
+			app.out("It was a(n) " + cardToCheck + "\nGarbage. Too bad.");
 			deck.discard(cardToCheck);
 		}
-		
+
 	}
 
 	private boolean wonRound(int playerIndex)
@@ -199,15 +204,15 @@ public class GarbageMaster extends GameMaster
 			evaluteCard((PlayingCard) this.getPlayer(playerIndex).pickCard(cardSlot));
 		}
 	}
-	
+
 	/**
 	 * adds players and deals out cards
 	 */
 	protected void setupGame()
 	{
-//		app.out("Enter name:");
-//		playerOne = new StandardPlayer(consoleIn.nextLine());
-//		this.addToGame(playerOne);
+		// app.out("Enter name:");
+		// playerOne = new StandardPlayer(consoleIn.nextLine());
+		// this.addToGame(playerOne);
 
 		addBotPlayers();
 
@@ -230,16 +235,16 @@ public class GarbageMaster extends GameMaster
 
 		deck.buildDeck();
 		deck.shuffleCards();
-		//app.out("deck size " + deck.deckSize());//debug
+		// app.out("deck size " + deck.deckSize());//debug
 		deck.dealCards(this.getPlayers(), maxHandSize);
 		deck.discard(deck.draw());
 	}
-	
+
 	private void addBotPlayers()
 	{
 		boolean error = true;
 		int cpuPlayers = 0;
-		
+
 		while (error)
 		{
 			app.out("How many CPU players?");
@@ -258,38 +263,38 @@ public class GarbageMaster extends GameMaster
 			this.addToGame(new TrashBot(null));
 		}
 	}
-	
+
 	private void debug()
 	{
 		String stats = "==[DEBUG]==\n";
 		stats += "Turn Count: " + this.getTurnCount();
 		stats += "\nCurrent Turn position: " + this.getCurrentTurn();
-		stats += "\nPlayer: "+this.currentPlayer();
+		stats += "\nPlayer: " + this.currentPlayer();
 		stats += "\nHand:\n";
-		for(int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
+		for (int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
 		{
-			stats += "["+index+"]: " + currentPlayer().pickCard(index) + " \tFlipped?: " + playerHandStatus[this.getCurrentTurn()][index] +"\n";
-			
+			stats += "[" + index + "]: " + currentPlayer().pickCard(index) + " \tFlipped?: " + playerHandStatus[this.getCurrentTurn()][index] + "\n";
+
 		}
 		stats += "Size: " + playerHandSize[this.getCurrentTurn()];
 		stats += "\n==========";
-		
+
 		app.out(stats);
-		
+
 	}
-	
+
 	private void printHand()
 	{
 		String stats = "Hand:\n";
-		for(int index = 0; index < playerHandSize[this.getCurrentTurn()]; index++)
+		for (int index = 0; index < this.currentPlayer().getHandSize(); index++)
 		{
-			stats += "["+index+"]: ";
-			if(playerHandStatus[this.getCurrentTurn()][index])
+			stats += "[" + index + "]: ";
+			if (playerHandStatus[this.getCurrentTurn()][index])
 				stats += this.currentPlayer().pickCard(index) + "\n";
 			else
 				stats += "????\n";
 		}
-		
+
 		app.out(stats);
 	}
 }
