@@ -104,6 +104,15 @@ public abstract class Dealer
 			}
 		}
 	}
+	
+	public void dealCards(Player specificPlayer, int handSize)
+	{
+		for(int times = 0; times < handSize && !(drawDeck.isEmpty()); times++)
+		{
+				if(!drawDeck.isEmpty())
+				specificPlayer.addToHand(this.draw());
+		}
+	}
 
 	/**
 	 * Removes a card from the draw deck

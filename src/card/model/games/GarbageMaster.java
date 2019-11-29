@@ -27,6 +27,7 @@ public class GarbageMaster extends GameMaster
 	private Scanner consoleIn;
 
 	private boolean gameOver;
+	private boolean roundOver;
 
 	public GarbageMaster(CardController app)
 	{
@@ -37,6 +38,7 @@ public class GarbageMaster extends GameMaster
 		playerOne = null;
 		consoleIn = new Scanner(System.in);
 		gameOver = false;
+		roundOver = false;
 	}
 
 	@Override
@@ -45,8 +47,18 @@ public class GarbageMaster extends GameMaster
 
 		setupGame();
 
+		int winner = -999;
 		while (!gameOver)
 		{
+			if(getCurrentTurn() == winner)
+			{
+				roundOver = false;
+				winner = -999;
+				app.out("Round over!");
+				discardEveryonesCards();
+				deck.reshuffleDiscardPile();
+				dealCards();
+			}
 			// app.out(debug());
 			app.out("It is now " + currentPlayer() + "'s turn.");
 			printHand();
@@ -80,28 +92,30 @@ public class GarbageMaster extends GameMaster
 				{
 					this.evaluteCard(deck.drawFromDiscardPile());
 				}
-				else if(!deck.isDrawDeckEmpty())
 				else 
 				{
 					this.evaluteCard(deck.draw());
 				}
 			}
+			
+			if(roundOver)
+			{
+				this.flipAllCardsLeft(this.getCurrentTurn());
+				if(wonRound(getCurrentTurn()))
+				{
+					currentPlayer().winner();
+					app.out(currentPlayer() + " is also a winner!");
+					playerHandSize[getCurrentTurn()]--;
+				}
+			}
 
-			if (wonRound(getCurrentTurn()))
+			if (wonRound(getCurrentTurn()) && !roundOver)
 			{
 				app.out(currentPlayer() + " has won the round!");
 				currentPlayer().winner();
-				int winner = this.getCurrentTurn();
-				this.next();
-				while (this.getCurrentTurn() != winner)
-				{
-
-					this.flipAllCardsLeft(this.getCurrentTurn());
-					if (wonRound(this.getCurrentTurn()))
-						app.out(this.currentPlayer() + " also won!");
-					this.next();
-				}
-
+				winner = this.getCurrentTurn();
+				playerHandSize[getCurrentTurn()]--;
+				roundOver = true; 
 			}
 
 			this.next();
@@ -135,7 +149,7 @@ public class GarbageMaster extends GameMaster
 				else
 				{
 					app.out(currentPlayer + " got a Jack!");
-					cardSlot = ((TrashBot) currentPlayer).processJack(playerHandStatus[playerIndex]);
+					cardSlot = ((TrashBot) currentPlayer).processJack(playerHandStatus[playerIndex],playerHandSize[playerIndex]);
 				}
 				
 				// if the card has already been flipped, try again
@@ -152,7 +166,17 @@ public class GarbageMaster extends GameMaster
 			{
 				currentPlayer.addToHand(cardSlot, cardToCheck);
 				app.out("The Jack got swapped with a(n) " + cardToCheck);
-				evaluteCard(currentPlayer.discardCard(cardSlot + 1));
+
+				playerHandStatus[playerIndex][cardSlot] = true;
+				
+				if(lastCard(playerIndex))
+				{
+					deck.discard(currentPlayer.discardCard(cardSlot + 1));
+				}
+				else
+				{
+					evaluteCard(currentPlayer.discardCard(cardSlot + 1));
+				}
 
 			}
 			else
@@ -211,8 +235,21 @@ public class GarbageMaster extends GameMaster
 	{
 		for (int cardSlot = 0; cardSlot < this.getPlayer(playerIndex).getHandSize(); cardSlot++)
 		{
+			if(!playerHandStatus[playerIndex][cardSlot])
 			evaluteCard((PlayingCard) this.getPlayer(playerIndex).pickCard(cardSlot));
 		}
+	}
+	
+	private boolean lastCard(int playerIndex)
+	{
+		int counter = 0;
+		for (int cardSlot = 0; cardSlot < playerHandSize[playerIndex]; cardSlot++)
+		{
+			if(!playerHandStatus[playerIndex][cardSlot])
+				counter++;
+		}
+		
+		return counter == 1;
 	}
 
 	/**
@@ -234,20 +271,39 @@ public class GarbageMaster extends GameMaster
 		}
 
 		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
-
+		
+		deck.buildDeck();
+		
+		dealCards();
+	}
+	
+	private void dealCards()
+	{
+		deck.shuffleCards();
+		
 		for (int player = 0; player < playerHandStatus.length; player++)
 		{
 			for (int index = 0; index < playerHandStatus[0].length; index++)
 			{
 				playerHandStatus[player][index] = false;
 			}
+			
+			deck.dealCards(this.getPlayer(player), playerHandSize[player]);
 		}
-
-		deck.buildDeck();
-		deck.shuffleCards();
-		// app.out("deck size " + deck.deckSize());//debug
-		deck.dealCards(this.getPlayers(), maxHandSize);
+		
 		deck.discard(deck.draw());
+	}
+	
+	private void discardEveryonesCards()
+	{
+		for (int player = 0; player < this.getPlayers().size(); player++)
+		{
+			StandardPlayer currentPlayer = (StandardPlayer) this.getPlayer(player);
+			for(int card = currentPlayer.getHandSize()-1; card >= 0 ; card--)
+			{
+				deck.discard(currentPlayer.discardCard(card));
+			}
+		}
 	}
 
 	private void addBotPlayers()
