@@ -3,30 +3,21 @@ package card.controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import card.model.*;
-import card.model.bots.FishBot;
-import card.model.cards.PlayingCard;
-import card.model.dealers.StandardDealer;
-import card.model.games.GarbageMaster;
-import card.model.games.GoFishMaster;
-import card.model.games.WarMaster;
-import card.model.players.StandardPlayer;
-import card.model.players.StandardPlayer.Type;
-
+import card.model.games.*;
 public class CardController
 {
 
 	private GoFishMaster toad;
 	private WarMaster bowser;
 	private GarbageMaster waluigi;
+	private UnoMaster yoshi;
 
 	public CardController()
 	{
 		toad = new GoFishMaster(this);
 		bowser = new WarMaster(this);
 		waluigi = new GarbageMaster(this);
-		
-
+		yoshi = new UnoMaster(this);
 	}
 
 	public void start()

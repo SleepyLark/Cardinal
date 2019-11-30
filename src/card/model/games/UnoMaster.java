@@ -1,10 +1,18 @@
 package card.model.games;
 
+import card.controller.CardController;
+
 public class UnoMaster extends GameMaster
 {
-	public UnoMaster()
+	
+	private CardController app;
+	
+	
+	public UnoMaster(CardController app)
 	{
 		super();
+		this.app = app;
+		
 	}
 
 	@Override
