@@ -16,6 +16,7 @@ public class CardFrame extends JFrame
 		super();
 		this.app = app;
 		appPanel = new CardPanel(app);
+		setupFrame();
 		
 	}
 	
@@ -23,10 +24,10 @@ public class CardFrame extends JFrame
 	{	
 		this.setContentPane(appPanel);
 		this.setSize(500, 500);
-		this.setVisible(false);
-		this.setResizable(true);
+		this.setVisible(true);
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setMinimumSize(new Dimension(500,500));
-		this.setTitle("Calendar");
+		this.setTitle("Cardinal");
 	}
 }
