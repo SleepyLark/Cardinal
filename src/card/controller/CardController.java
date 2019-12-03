@@ -3,6 +3,8 @@ package card.controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import card.model.games.*;
 public class CardController
 {
@@ -22,8 +24,15 @@ public class CardController
 
 	public void start()
 	{
-	
+		String[] option = {"Go Fish", "Garbage", "UNO"};
+		int result = JOptionPane.showOptionDialog(null,"Pick a Game","Cardinal",JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE, null,option, option[0]);
+		
+		if(result == 1)
 		waluigi.startGame();
+		else if (result == 2)
+			yoshi.startGame();
+		else
+			toad.startGame();
 	}
 	
 	/**
