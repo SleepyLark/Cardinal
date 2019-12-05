@@ -257,9 +257,9 @@ public class GarbageMaster extends GameMaster
 	 */
 	protected void setupGame()
 	{
-		// app.out("Enter name:");
-		// playerOne = new StandardPlayer(consoleIn.nextLine());
-		// this.addToGame(playerOne);
+		 app.out("Enter name:");
+		 playerOne = new StandardPlayer(consoleIn.nextLine());
+		 this.addToGame(playerOne);
 
 		addBotPlayers();
 
