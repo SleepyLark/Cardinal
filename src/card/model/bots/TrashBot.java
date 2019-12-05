@@ -4,7 +4,7 @@ import card.model.cards.Card;
 import card.model.dealers.Dealer;
 import card.model.players.StandardPlayer;
 
-public class TrashBot extends StandardBot
+public class TrashBot extends Bot
 {
 	public static int DRAW_A_CARD = 0;
 	public static int TAKE_FROM_DISCARD = 1;

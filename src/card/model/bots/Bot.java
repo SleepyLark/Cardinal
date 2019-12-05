@@ -2,18 +2,18 @@ package card.model.bots;
 
 import java.util.ArrayList;
 
-import card.model.players.StandardPlayer;
+import card.model.players.Player;
 
-public class StandardBot extends StandardPlayer
+public abstract class Bot extends Player
 {
 	private ArrayList<String> usernames;
 	
-	public StandardBot(String name)
+	public Bot(String username)
 	{
-		super(name);
+		super(username);
 		usernames = new ArrayList<String>();
 		makeUsernames();
-		if (name == null)
+		if (username == null)
 			randomUsername();
 	}
 	

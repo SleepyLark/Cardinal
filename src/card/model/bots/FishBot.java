@@ -2,9 +2,8 @@ package card.model.bots;
 
 import card.model.cards.PlayingCard;
 import card.model.dealers.Dealer;
-import card.model.players.StandardPlayer;
 
-public class FishBot extends StandardBot
+public class FishBot extends Bot
 {
 	private int lastTypeAsked;
 
