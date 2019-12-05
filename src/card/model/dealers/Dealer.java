@@ -204,7 +204,7 @@ public abstract class Dealer
 		String desc = "";
 		for(int index = 0; index < limit; index ++)
 		{
-			desc += (index + 1) +":/t" + list.get(index) + "/n";
+			desc += (index + 1) +":\t" + list.get(index) + "\n";
 		}
 		
 		return desc;
@@ -217,7 +217,7 @@ public abstract class Dealer
 		}
 		app.out("====[DRAW DECK DEBUG]====");
 		app.out("Last card drawn: " + lastCardDrawn);
-		app.out("Cards still in deck:/n" + readableList(drawDeck,numberOfCardsToShow));
+		app.out("Cards still in deck: \n" + readableList(drawDeck,numberOfCardsToShow));
 	}
 	
 	public void discardDebug(int numberOfCardsToShow)
@@ -228,7 +228,7 @@ public abstract class Dealer
 		}
 		app.out("====[DISCARD PILE DEBUG]====");
 		app.out("Last card discarded: " + lastCardDiscarded);
-		app.out("Cards still in pile:/n" + readableList(discardPile,numberOfCardsToShow));
+		app.out("Cards still in pile: \n" + readableList(discardPile,numberOfCardsToShow));
 	}
 
 }
