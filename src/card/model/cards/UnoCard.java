@@ -2,7 +2,7 @@ package card.model.cards;
 
 public class UnoCard implements Card
 {
-	public enum Color
+	public enum ColorSuit
 	{
 		RED, BLUE, YELLOW, GREEN, BLACK;
 	}
@@ -11,10 +11,10 @@ public class UnoCard implements Card
 	public static int SKIP = 12;
 	public static int DRAW_TWO = 13;
 	
-	private Color color;
+	private ColorSuit color;
 	private int type;
 	
-	public UnoCard(Color color, int type)
+	public UnoCard(ColorSuit color, int type)
 	{
 		this.color = color;
 		this.type = type;
@@ -34,7 +34,7 @@ public class UnoCard implements Card
 		return this.type;
 	}
 	
-	public Color getColor()
+	public ColorSuit getColor()
 	{
 		return this.color;
 	}
