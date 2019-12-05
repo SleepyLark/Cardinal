@@ -29,6 +29,16 @@ public class UnoCard implements Card
 		return desc;
 	}
 	
+	public int getType()
+	{
+		return this.type;
+	}
+	
+	public Color getColor()
+	{
+		return this.color;
+	}
+	
 	private String specialToString()
 	{
 		String desc = null;

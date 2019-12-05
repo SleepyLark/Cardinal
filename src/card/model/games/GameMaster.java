@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public abstract class GameMaster
 {
 	private ArrayList<Player> playerOrder;
-	private int currentTurn;
-	private int turnCount;
+	protected int currentTurn;
+	protected int turnCount;
 	
 	public GameMaster()
 	{
