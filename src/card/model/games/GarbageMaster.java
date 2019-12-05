@@ -328,6 +328,14 @@ public class GarbageMaster extends GameMaster
 		{
 			this.addToGame(new TrashBot(null));
 		}
+		
+		//if there's more than 4 players, add in another deck (may need to adjust exact what should be the limit)
+		for(int cycles = 0; cycles < (cpuPlayers + 1)/4; cycles++)
+		{
+			deck.buildDeck();
+		}
+		
+		app.out(deck.deckSize());
 	}
 
 	private void debug()
