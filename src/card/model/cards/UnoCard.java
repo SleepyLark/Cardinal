@@ -7,9 +7,11 @@ public class UnoCard implements Card
 		RED, BLUE, YELLOW, GREEN, BLACK;
 	}
 	
-	public static int REVERSE = 11;
-	public static int SKIP = 12;
-	public static int DRAW_TWO = 13;
+	public static int REVERSE = 10;
+	public static int SKIP = 11;
+	public static int DRAW_TWO = 12;
+	public static int WILD = 13;
+	public static int DRAW_FOUR = 14;
 	
 	private ColorSuit color;
 	private int type;
@@ -42,18 +44,21 @@ public class UnoCard implements Card
 	private String specialToString()
 	{
 		String desc = null;
+		
 		if(type == REVERSE)
-		{
 			desc = "Reverse";
-		}
+		
 		else if(type == SKIP)
-		{
 			desc = "Skip";
-		}
+		
 		else if(type == DRAW_TWO)
-		{
 			desc = "+2";
-		}
+		
+		else if(type == WILD)
+			desc = "Wild";
+		
+		else if(type == DRAW_FOUR)
+			desc = "+4";
 		
 		return desc;
 	}
