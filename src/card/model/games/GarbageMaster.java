@@ -7,6 +7,7 @@ import card.model.bots.TrashBot;
 import card.model.cards.Card;
 import card.model.cards.PlayingCard;
 import card.model.dealers.StandardDealer;
+import card.model.players.Player;
 import card.model.players.StandardPlayer;
 
 public class GarbageMaster extends GameMaster
@@ -131,7 +132,7 @@ public class GarbageMaster extends GameMaster
 		app.out(card);
 
 		PlayingCard cardToCheck = (PlayingCard) card;
-		StandardPlayer currentPlayer = (StandardPlayer) this.currentPlayer();
+		Player currentPlayer = this.currentPlayer();
 		int playerIndex = this.getCurrentTurn();
 
 		if (!wonRound(playerIndex) && ((cardToCheck.getNumber() <= playerHandSize[playerIndex]) || (cardToCheck.getNumber() == PlayingCard.JACK)))
@@ -298,7 +299,7 @@ public class GarbageMaster extends GameMaster
 	{
 		for (int player = 0; player < this.getPlayers().size(); player++)
 		{
-			StandardPlayer currentPlayer = (StandardPlayer) this.getPlayer(player);
+			Player currentPlayer = this.getPlayer(player);
 			for(int card = currentPlayer.getHandSize()-1; card >= 0 ; card--)
 			{
 				deck.discard(currentPlayer.discardCard(card));
