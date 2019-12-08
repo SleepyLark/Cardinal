@@ -51,7 +51,7 @@ public class GarbageMaster extends GameMaster
 		int winner = -999;
 		while (!gameOver)
 		{
-			if(getCurrentTurn() == winner)
+			if (getCurrentTurn() == winner)
 			{
 				roundOver = false;
 				winner = -999;
@@ -64,15 +64,15 @@ public class GarbageMaster extends GameMaster
 			app.out("It is now " + currentPlayer() + "'s turn.");
 			printHand();
 			app.out("Discard Pile: " + deck.discardPeek());
-			
-			if(deck.isDrawDeckEmpty())
+
+			if (deck.isDrawDeckEmpty())
 			{
 				Card temp = deck.drawFromDiscardPile();
 				deck.reshuffleDiscardPile();
 				app.out("Draw pile empty. Reshuffling...");
 				deck.discard(temp);
 			}
-			
+
 			if (!(currentPlayer().isBot()))
 			{
 				app.out("Which deck do you want to draw?");
@@ -93,16 +93,16 @@ public class GarbageMaster extends GameMaster
 				{
 					this.evaluteCard(deck.drawFromDiscardPile());
 				}
-				else 
+				else
 				{
 					this.evaluteCard(deck.draw());
 				}
 			}
-			
-			if(roundOver)
+
+			if (roundOver)
 			{
 				this.flipAllCardsLeft(this.getCurrentTurn());
-				if(wonRound(getCurrentTurn()))
+				if (wonRound(getCurrentTurn()))
 				{
 					currentPlayer().winner();
 					app.out(currentPlayer() + " is also a winner!");
@@ -116,67 +116,23 @@ public class GarbageMaster extends GameMaster
 				currentPlayer().winner();
 				winner = this.getCurrentTurn();
 				playerHandSize[getCurrentTurn()]--;
-				roundOver = true; 
+				roundOver = true;
 			}
 
 			this.next();
 		}
 
 	}
-	
 
 	/**
 	 * adds players and deals out cards
 	 */
 	protected void setupGame()
 	{
-		 app.out("Enter name:");
-		 playerOne = new StandardPlayer(consoleIn.nextLine());
-		 this.addToGame(playerOne);
-		 
-		 boolean error = true;
-			int cpuPlayers = 0;
+		app.out("Enter name:");
+		playerOne = new StandardPlayer(consoleIn.nextLine());
+		this.addToGame(playerOne);
 
-			while (error)
-			{
-				app.out("How many CPU players?");
-				cpuPlayers = consoleIn.nextInt();
-
-				if (cpuPlayers < 1)
-				{
-					app.out("Invalid number of players.");
-				}
-				else
-					error = false;
-			}
-
-
-		addBotPlayers(cpuPlayers, Game.GARBAGE);
-
-		playerHandSize = new int[this.numberOfPlayers()];
-
-		for (int index = 0; index < playerHandSize.length; index++)
-		{
-			playerHandSize[index] = maxHandSize;
-		}
-
-		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
-		
-		
-		//if there's more than 4 players, add in another deck (may need to adjust exact what should be the limit)
-				for(int cycles = 0; cycles <= (cpuPlayers + 1)/4; cycles++)
-				{
-					deck.buildDeck();
-				}
-				
-				app.out(deck.deckSize());
-		
-		dealCards();
-	}
-	
-
-	private void addBotPlayers()
-	{
 		boolean error = true;
 		int cpuPlayers = 0;
 
@@ -193,14 +149,62 @@ public class GarbageMaster extends GameMaster
 				error = false;
 		}
 
-		for (int times = 0; times < cpuPlayers; times++)
+		addBotPlayers(cpuPlayers, Game.GARBAGE);
+
+		playerHandSize = new int[this.numberOfPlayers()];
+
+		for (int index = 0; index < playerHandSize.length; index++)
 		{
-			this.addToGame(new TrashBot(null));
+			playerHandSize[index] = maxHandSize;
 		}
-		
-		
+
+		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
+
+		// if there's more than 4 players, add in another deck (may need to adjust exact
+		// what should be the limit)
+		for (int cycles = 0; cycles <= (cpuPlayers + 1) / 4; cycles++)
+		{
+			deck.buildDeck();
+		}
+
+		app.out(deck.deckSize());
+
+		dealCards();
 	}
-	
+
+	// =====[DECK MANAGEMENT]=====
+
+	private void dealCards()
+	{
+		deck.shuffleCards();
+
+		for (int player = 0; player < playerHandStatus.length; player++)
+		{
+			for (int index = 0; index < playerHandStatus[0].length; index++)
+			{
+				playerHandStatus[player][index] = false;
+			}
+
+			deck.dealCards(this.getPlayer(player), playerHandSize[player]);
+		}
+
+		deck.discard(deck.draw());
+	}
+
+	private void discardEveryonesCards()
+	{
+		for (int player = 0; player < this.getPlayers().size(); player++)
+		{
+			Player currentPlayer = this.getPlayer(player);
+			for (int card = currentPlayer.getHandSize() - 1; card >= 0; card--)
+			{
+				deck.discard(currentPlayer.discardCard(card));
+			}
+		}
+	}
+
+	// =====[GAME LOGIC]=====
+	// Rules and methods needed to play the game
 
 	private void evaluteCard(Card card)
 	{
@@ -218,7 +222,7 @@ public class GarbageMaster extends GameMaster
 			int cardSlot = cardToCheck.getNumber() - 1;
 
 			// Jacks can be placed anywhere
-			if (cardSlot +1 == PlayingCard.JACK)
+			if (cardSlot + 1 == PlayingCard.JACK)
 			{
 				if (!currentPlayer.isBot())
 				{
@@ -228,9 +232,9 @@ public class GarbageMaster extends GameMaster
 				else
 				{
 					app.out(currentPlayer + " got a Jack!");
-					cardSlot = ((TrashBot) currentPlayer).processJack(playerHandStatus[playerIndex],playerHandSize[playerIndex]);
+					cardSlot = ((TrashBot) currentPlayer).processJack(playerHandStatus[playerIndex], playerHandSize[playerIndex]);
 				}
-				
+
 				// if the card has already been flipped, try again
 				if (playerHandStatus[playerIndex][cardSlot] == true)
 				{
@@ -247,8 +251,8 @@ public class GarbageMaster extends GameMaster
 				app.out("The Jack got swapped with a(n) " + cardToCheck);
 
 				playerHandStatus[playerIndex][cardSlot] = true;
-				
-				if(lastCard(playerIndex))
+
+				if (lastCard(playerIndex))
 				{
 					deck.discard(currentPlayer.discardCard(cardSlot + 1));
 				}
@@ -314,52 +318,25 @@ public class GarbageMaster extends GameMaster
 	{
 		for (int cardSlot = 0; cardSlot < this.getPlayer(playerIndex).getHandSize(); cardSlot++)
 		{
-			if(!playerHandStatus[playerIndex][cardSlot])
-			evaluteCard((PlayingCard) this.getPlayer(playerIndex).pickCard(cardSlot));
+			if (!playerHandStatus[playerIndex][cardSlot])
+				evaluteCard((PlayingCard) this.getPlayer(playerIndex).pickCard(cardSlot));
 		}
 	}
-	
+
 	private boolean lastCard(int playerIndex)
 	{
 		int counter = 0;
 		for (int cardSlot = 0; cardSlot < playerHandSize[playerIndex]; cardSlot++)
 		{
-			if(!playerHandStatus[playerIndex][cardSlot])
+			if (!playerHandStatus[playerIndex][cardSlot])
 				counter++;
 		}
-		
+
 		return counter == 1;
 	}
 
-	private void dealCards()
-	{
-		deck.shuffleCards();
-		
-		for (int player = 0; player < playerHandStatus.length; player++)
-		{
-			for (int index = 0; index < playerHandStatus[0].length; index++)
-			{
-				playerHandStatus[player][index] = false;
-			}
-			
-			deck.dealCards(this.getPlayer(player), playerHandSize[player]);
-		}
-		
-		deck.discard(deck.draw());
-	}
-	
-	private void discardEveryonesCards()
-	{
-		for (int player = 0; player < this.getPlayers().size(); player++)
-		{
-			Player currentPlayer = this.getPlayer(player);
-			for(int card = currentPlayer.getHandSize()-1; card >= 0 ; card--)
-			{
-				deck.discard(currentPlayer.discardCard(card));
-			}
-		}
-	}
-
+	// =====[DEBUG]=====
+	// quick information to help when testing
 
 	private void debug()
 	{
