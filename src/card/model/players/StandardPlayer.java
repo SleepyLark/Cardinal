@@ -42,9 +42,7 @@ public class StandardPlayer extends Player
 					if(nextNumber < currentNumber)
 					{
 						Card cardToSwap = currentHand.remove(nextIndex);
-						Card firstCard = currentHand.remove(index);
 						currentHand.add(index, cardToSwap);
-						currentHand.add(nextIndex, firstCard);
 					}
 				}
 			}
