@@ -88,6 +88,8 @@ public abstract class Player
 		currentHand.remove(cardToDiscard);
 		return cardToDiscard;
 	}
+	
+	public Card pickCard(Card cardToPick)
 	{
 		if (currentHand.indexOf(cardToPick) < 0)
 			cardToPick = null;
@@ -98,7 +100,7 @@ public abstract class Player
 	/**
 	 * 
 	 */
-	public Card pullCard(int index)
+	public Card pickCard(int index)
 	{
 		return currentHand.get(index);
 	}
