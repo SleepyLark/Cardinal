@@ -1,6 +1,7 @@
 package card.model.bots;
 
 import card.model.cards.Card;
+import card.model.cards.PlayingCard;
 import card.model.dealers.Dealer;
 import card.model.players.StandardPlayer;
 
@@ -17,7 +18,10 @@ public class TrashBot extends Bot
 	
 	public int turn(Card lastCardDiscarded, boolean[] currentHand )
 	{
-		return DRAW_A_CARD;
+		if(currentHand[((PlayingCard)lastCardDiscarded).getNumber() - 1])
+		return TAKE_FROM_DISCARD;
+		else
+			return DRAW_A_CARD;
 	}
 	
 	public int processJack(boolean[] currentHand, int maxSize)
