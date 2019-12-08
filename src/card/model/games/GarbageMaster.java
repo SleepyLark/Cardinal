@@ -123,6 +123,84 @@ public class GarbageMaster extends GameMaster
 		}
 
 	}
+	
+
+	/**
+	 * adds players and deals out cards
+	 */
+	protected void setupGame()
+	{
+		 app.out("Enter name:");
+		 playerOne = new StandardPlayer(consoleIn.nextLine());
+		 this.addToGame(playerOne);
+		 
+		 boolean error = true;
+			int cpuPlayers = 0;
+
+			while (error)
+			{
+				app.out("How many CPU players?");
+				cpuPlayers = consoleIn.nextInt();
+
+				if (cpuPlayers < 1)
+				{
+					app.out("Invalid number of players.");
+				}
+				else
+					error = false;
+			}
+
+
+		addBotPlayers(cpuPlayers, Game.GARBAGE);
+
+		playerHandSize = new int[this.numberOfPlayers()];
+
+		for (int index = 0; index < playerHandSize.length; index++)
+		{
+			playerHandSize[index] = maxHandSize;
+		}
+
+		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
+		
+		
+		//if there's more than 4 players, add in another deck (may need to adjust exact what should be the limit)
+				for(int cycles = 0; cycles <= (cpuPlayers + 1)/4; cycles++)
+				{
+					deck.buildDeck();
+				}
+				
+				app.out(deck.deckSize());
+		
+		dealCards();
+	}
+	
+
+	private void addBotPlayers()
+	{
+		boolean error = true;
+		int cpuPlayers = 0;
+
+		while (error)
+		{
+			app.out("How many CPU players?");
+			cpuPlayers = consoleIn.nextInt();
+
+			if (cpuPlayers < 1)
+			{
+				app.out("Invalid number of players.");
+			}
+			else
+				error = false;
+		}
+
+		for (int times = 0; times < cpuPlayers; times++)
+		{
+			this.addToGame(new TrashBot(null));
+		}
+		
+		
+	}
+	
 
 	private void evaluteCard(Card card)
 	{
@@ -253,31 +331,6 @@ public class GarbageMaster extends GameMaster
 		return counter == 1;
 	}
 
-	/**
-	 * adds players and deals out cards
-	 */
-	protected void setupGame()
-	{
-		 app.out("Enter name:");
-		 playerOne = new StandardPlayer(consoleIn.nextLine());
-		 this.addToGame(playerOne);
-
-		addBotPlayers();
-
-		playerHandSize = new int[this.numberOfPlayers()];
-
-		for (int index = 0; index < playerHandSize.length; index++)
-		{
-			playerHandSize[index] = maxHandSize;
-		}
-
-		playerHandStatus = new boolean[this.numberOfPlayers()][maxHandSize];
-		
-		deck.buildDeck();
-		
-		dealCards();
-	}
-	
 	private void dealCards()
 	{
 		deck.shuffleCards();
@@ -307,37 +360,6 @@ public class GarbageMaster extends GameMaster
 		}
 	}
 
-	private void addBotPlayers()
-	{
-		boolean error = true;
-		int cpuPlayers = 0;
-
-		while (error)
-		{
-			app.out("How many CPU players?");
-			cpuPlayers = consoleIn.nextInt();
-
-			if (cpuPlayers < 1)
-			{
-				app.out("Invalid number of players.");
-			}
-			else
-				error = false;
-		}
-
-		for (int times = 0; times < cpuPlayers; times++)
-		{
-			this.addToGame(new TrashBot(null));
-		}
-		
-		//if there's more than 4 players, add in another deck (may need to adjust exact what should be the limit)
-		for(int cycles = 0; cycles < (cpuPlayers + 1)/4; cycles++)
-		{
-			deck.buildDeck();
-		}
-		
-		app.out(deck.deckSize());
-	}
 
 	private void debug()
 	{

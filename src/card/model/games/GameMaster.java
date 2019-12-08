@@ -1,6 +1,7 @@
 package card.model.games;
 
 import card.controller.CardController;
+import card.model.bots.*;
 import card.model.players.Player;
 
 import java.util.ArrayList;
@@ -22,6 +23,21 @@ public abstract class GameMaster
 		currentTurn = 0;
 		turnCount = 0;
 	}
+	
+	public enum Game
+	{
+		GO_FISH, GARBAGE, UNO;
+	}
+	
+	/**
+	 * starts the game
+	 */
+	public abstract void startGame();
+	
+	/**
+	 * Additional items that need to be prepared before the actual game starts
+	 */
+	protected abstract void setupGame();
 	
 	/**
 	 *  adds a player to the game
@@ -84,16 +100,32 @@ public abstract class GameMaster
 		return playerOrder.size();
 	}
 	
-	/**
-	 * starts the game
-	 */
-	public abstract void startGame();
 	
-	/**
-	 * Additional items that need to be prepared before the actual gameplay starts
-	 */
-	protected abstract void setupGame();
+	protected void addBotPlayers(int numberOfBots, Game currentGame)
+	{
+		for (int times = 0; times < numberOfBots; times++)
+		{
+			this.addToGame(makeBot(currentGame));
+		}
+	}
 	
+	private Bot makeBot(Game gameType)
+	{
+		Bot temp = null;
+		
+		switch(gameType)
+		{
+		case GO_FISH:
+			temp = new FishBot(null);
+		case GARBAGE:
+			temp = new TrashBot(null);
+		case UNO:
+			temp = new UnoBot(null);		
+		}
+		
+		return temp;
+	}
+		
 	/**
 	 * switches to the next player
 	 * <br><i> uses a "modulus" effect where the number will cycle back to zero once it hits max number. useful for readability</i>
