@@ -17,7 +17,9 @@ public class TrashBot extends Bot
 
 	public int turn(Card lastCardDiscarded, boolean[] currentHand)
 	{
-		if (currentHand[((PlayingCard) lastCardDiscarded).getNumber() - 1])
+		int cardNum = ((PlayingCard) lastCardDiscarded).getNumber();
+		if ((cardNum < this.getHandSize() && !currentHand[cardNum - 1]) 
+				|| cardNum == PlayingCard.JACK)
 			return TAKE_FROM_DISCARD;
 		else
 			return DRAW_A_CARD;
