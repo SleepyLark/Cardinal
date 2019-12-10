@@ -14,9 +14,12 @@ public class GarbageMaster extends GameMaster
 {
 
 	private CardController app;
+	/**
+	 * tells how many cards should be in that player's hand
+	 */
 	private int[] playerHandSize;
 	/**
-	 * tells if the card has been flipped over or not
+	 * tells if the card has been flip over or not
 	 */
 	private boolean[][] playerHandStatus;
 	private int maxHandSize;
@@ -51,6 +54,7 @@ public class GarbageMaster extends GameMaster
 		int winner = -999;
 		while (!gameOver)
 		{
+			//it's original winner's turn, meaning everyone has already flip their cards, so a new round begins
 			if (getCurrentTurn() == winner)
 			{
 				roundOver = false;
@@ -60,7 +64,9 @@ public class GarbageMaster extends GameMaster
 				deck.reshuffleDiscardPile();
 				dealCards();
 			}
-			// app.out(debug());
+			
+			
+			//=====[CURRENT PLAYER'S TURN]=====
 			app.out("It is now " + currentPlayer() + "'s turn.");
 			printHand();
 			app.out("Discard Pile: " + deck.discardPeek());
@@ -72,7 +78,8 @@ public class GarbageMaster extends GameMaster
 				app.out("Draw pile empty. Reshuffling...");
 				deck.discard(temp);
 			}
-
+			
+			//If the currentPlayer is not a human
 			if (!(currentPlayer().isBot()))
 			{
 				app.out("Which deck do you want to draw?");
@@ -106,7 +113,10 @@ public class GarbageMaster extends GameMaster
 				{
 					currentPlayer().winner();
 					app.out(currentPlayer() + " is also a winner!");
-					playerHandSize[getCurrentTurn()]--;
+					if(playerHandSize[getCurrentTurn()]-- == 0)
+					{
+						app.out(currentPlayer()+" is also a winner!");
+					}
 				}
 			}
 
@@ -115,7 +125,12 @@ public class GarbageMaster extends GameMaster
 				app.out(currentPlayer() + " has won the round!");
 				currentPlayer().winner();
 				winner = this.getCurrentTurn();
-				playerHandSize[getCurrentTurn()]--;
+				if(playerHandSize[getCurrentTurn()]-- == 0)
+				{
+					app.out(currentPlayer()+" is the winner!");
+					
+					gameOver = true;
+				}
 				roundOver = true;
 			}
 
@@ -129,9 +144,9 @@ public class GarbageMaster extends GameMaster
 	 */
 	protected void setupGame()
 	{
-		app.out("Enter name:");
-		playerOne = new StandardPlayer(consoleIn.nextLine());
-		this.addToGame(playerOne);
+//		app.out("Enter name:");
+//		playerOne = new StandardPlayer(consoleIn.nextLine());
+//		this.addToGame(playerOne);
 
 		boolean error = true;
 		int cpuPlayers = 0;
@@ -295,9 +310,10 @@ public class GarbageMaster extends GameMaster
 		boolean winner = false;
 		int counter = 0;
 
-		for (int index = 0; index < playerHandSize[playerIndex]; index++)
+		for (int cardSlot = 0; cardSlot < playerHandSize[playerIndex]; cardSlot++)
 		{
-			if (playerHandStatus[playerIndex][index] == true)
+			int currentCardNum = ((PlayingCard) this.getPlayer(playerIndex).pickCard(cardSlot)).getNumber();
+			if (playerHandStatus[playerIndex][cardSlot] == true && ((currentCardNum == cardSlot + 1) || (currentCardNum == PlayingCard.JACK)))
 			{
 				counter++;
 			}
