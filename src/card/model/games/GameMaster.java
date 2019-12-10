@@ -130,10 +130,13 @@ public abstract class GameMaster
 		{
 		case GO_FISH:
 			temp = new FishBot(null);
+			break;
 		case GARBAGE:
 			temp = new TrashBot(null);
+			break;
 		case UNO:
 			temp = new UnoBot(null);
+			break;
 		}
 
 		return temp;
