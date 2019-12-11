@@ -2,6 +2,7 @@ package card.model.bots;
 
 import java.util.ArrayList;
 
+import card.model.cards.Card;
 import card.model.players.Player;
 
 public abstract class Bot extends Player
@@ -38,5 +39,11 @@ public abstract class Bot extends Player
 	public boolean isBot()
 	{
 		return true;
+	}
+	
+	@Override
+	public int compare(Card arg0, Card arg1)
+	{
+		return 0;
 	}
 }

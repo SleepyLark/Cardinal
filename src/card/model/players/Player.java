@@ -1,6 +1,7 @@
 package card.model.players;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import card.model.cards.Card;
 import card.model.cards.PlayingCard;
@@ -13,7 +14,7 @@ import card.model.players.StandardPlayer.Type;
  * @author Skyler
  *
  */
-public abstract class Player
+public abstract class Player implements Comparator<Card>
 {
 	private String username;
 	private int winCount;
