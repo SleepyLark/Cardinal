@@ -2,6 +2,8 @@ package card.model.games;
 
 import card.controller.CardController;
 import card.model.dealers.UnoDealer;
+import card.model.players.UnoPlayer;
+import card.model.players.UnoPlayer.Type;
 
 public class UnoMaster extends GameMaster
 {
@@ -24,7 +26,7 @@ public class UnoMaster extends GameMaster
 	public void startGame()
 	{
 		setupGame();
-		deck.drawDebug(-1);
+		
 
 	}
 
@@ -32,6 +34,13 @@ public class UnoMaster extends GameMaster
 	protected void setupGame()
 	{
 		deck.buildDeck();
+		
+		app.out("Enter name:");
+		UnoPlayer playerOne = new UnoPlayer(consoleIn.nextLine());
+		this.addToGame(playerOne);
+		deck.shuffleCards();
+		deck.dealCards(playerOne, 7);
+		playerOne.organizeHand(Type.COLOR);
 
 	}
 
