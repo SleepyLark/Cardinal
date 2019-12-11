@@ -118,9 +118,11 @@ public class GarbageMaster extends GameMaster
 						app.out(currentPlayer()+" is also a winner!");
 					}
 				}
+				if(playerHandSize[winner]==0 && getCurrentTurn() + 1 == winner)
+					gameOver = true;
 			}
 
-			if (wonRound(getCurrentTurn()) && !roundOver)
+			if (!roundOver && wonRound(getCurrentTurn()))
 			{
 				app.out(currentPlayer() + " has won the round!");
 				currentPlayer().winner();
@@ -129,13 +131,14 @@ public class GarbageMaster extends GameMaster
 				{
 					app.out(currentPlayer()+" is the winner!");
 					
-					gameOver = true;
 				}
 				roundOver = true;
 			}
 
 			this.next();
 		}
+		
+		app.out("Game Over!");
 
 	}
 
