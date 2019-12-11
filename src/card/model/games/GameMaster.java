@@ -3,7 +3,7 @@ package card.model.games;
 import card.controller.CardController;
 import card.model.bots.*;
 import card.model.players.Player;
-
+import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
@@ -17,10 +17,12 @@ public abstract class GameMaster
 	private ArrayList<Player> playerOrder;
 	protected int currentTurn;
 	protected int turnCount;
+	protected Scanner consoleIn;
 
 	public GameMaster()
 	{
 		playerOrder = new ArrayList<Player>();
+		consoleIn = new Scanner(System.in);
 		currentTurn = 0;
 		turnCount = 0;
 	}
