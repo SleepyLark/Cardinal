@@ -125,6 +125,15 @@ public abstract class Dealer
 	}
 	
 	/**
+	 * removes the first card in the draw deck and gives it to the player
+	 * @param playerThatDraws
+	 */
+	public void draw(Player playerThatDraws)
+	{
+		playerThatDraws.addToHand(draw());
+	}
+	
+	/**
 	 * Removes a card from the discard pile
 	 * @return Draws the first cards from the discard pile
 	 */
