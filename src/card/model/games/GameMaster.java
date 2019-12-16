@@ -189,5 +189,22 @@ public abstract class GameMaster
 		currentTurn = 0;
 		turnCount = 0;
 	}
+	
+	public boolean validInt(String word, int minInclusive, int maxExclusive)
+	{
+		boolean valid = false;
+		
+		try
+		{
+			int num = Integer.parseInt(word);
+			valid = (num >= minInclusive && num < maxExclusive);
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return valid;
+	}
 
 }
