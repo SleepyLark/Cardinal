@@ -74,4 +74,9 @@ public class UnoCard implements Card
 			return colorToString() + " " + type;
 		}
 	}
+
+	public boolean isWild()
+	{
+		return (type == WILD||type == DRAW_FOUR);
+	}
 }
